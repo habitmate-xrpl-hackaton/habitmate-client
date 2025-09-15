@@ -1,0 +1,44 @@
+{
+  "name": "@habitmate/xrpl-react-integration",
+  "version": "1.0.0",
+  "description": "A modular React integration package for XRPL with MetaMask Snap support",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "xrpl",
+    "react",
+    "metamask",
+    "blockchain",
+    "crypto",
+    "wallet"
+  ],
+  "author": "Your Organization",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "dependencies": {
+    "@metamask/detect-provider": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "typescript": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/xrpl-react-integration.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/xrpl-react-integration/issues"
+  },
+  "homepage": "https://github.com/your-org/xrpl-react-integration#readme"
+}

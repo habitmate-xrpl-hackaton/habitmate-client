@@ -1,0 +1,9 @@
+import { imgLeftIcon } from "./svg-zmqsh";
+
+export default function LeftIcon() {
+  return (
+    <div className="relative size-full" data-name="Left Icon">
+      <img className="block max-w-none size-full" src={imgLeftIcon} />
+    </div>
+  );
+}
