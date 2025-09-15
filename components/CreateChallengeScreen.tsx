@@ -66,6 +66,24 @@ export default function CreateChallengeScreen({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (field: string, value: string) => {
+    // participationFee 필드에 대해서만 정규식으로 1~100 범위 체크
+    if (field === "participationFee") {
+      // 빈 값이거나 1~100 범위의 숫자만 허용하는 정규식
+      const validPattern = /^(|([1-9]|[1-9][0-9]|100))$/;
+      if (!validPattern.test(value)) {
+        return; // 유효하지 않은 값이면 업데이트하지 않음
+      }
+    }
+
+    // serviceFee 필드에 대해서만 정규식으로 0~50 범위 체크
+    if (field === "serviceFee") {
+      // 빈 값이거나 0~50 범위의 숫자만 허용하는 정규식
+      const validPattern = /^(|(0|[1-9]|[1-4][0-9]|50))$/;
+      if (!validPattern.test(value)) {
+        return; // 유효하지 않은 값이면 업데이트하지 않음
+      }
+    }
+
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -756,20 +774,19 @@ export default function CreateChallengeScreen({
                 <div className="mt-1">
                   <Input
                     id="participationFee"
-                    type="number"
+                    type="text"
                     placeholder="50"
                     value={formData.participationFee}
                     onChange={(e) =>
                       handleInputChange("participationFee", e.target.value)
                     }
                     className="bg-[#f6f9ff] border-[#eaecf0]"
-                    min="1"
                   />
-                  {formData.participationFee && (
+                  {/* {formData.participationFee && (
                     <p className="text-xs text-[#686873] mt-1">
                       ≈ ${convertXRPToUSD(formData.participationFee)} USD
                     </p>
-                  )}
+                  )} */}
                 </div>
               </div>
 
@@ -780,25 +797,23 @@ export default function CreateChallengeScreen({
                   <div className="mt-1">
                     <Input
                       id="serviceFee"
-                      type="number"
+                      type="text"
                       placeholder="10"
                       value={formData.serviceFee}
                       onChange={(e) =>
                         handleInputChange("serviceFee", e.target.value)
                       }
                       className="bg-[#f6f9ff] border-[#eaecf0]"
-                      min="0"
-                      max="50"
                     />
                     <p className="text-xs text-[#686873] mt-1">
-                      Percentage of participation fee kept as non-refundable
+                      Service Fee is the amount kept by the challenge creator.
                     </p>
                   </div>
                 </div>
               )}
 
               {/* Total Payment Calculation for Group Challenges */}
-              {challengeType === "group" &&
+              {/* {challengeType === "group" &&
                 formData.participationFee &&
                 formData.serviceFee && (
                   <div className="mt-4 p-3 bg-[#f6f9ff] rounded-lg border border-[#3843ff]/20">
@@ -825,7 +840,7 @@ export default function CreateChallengeScreen({
                       </div>
                     </div>
                   </div>
-                )}
+                )} */}
             </div>
           </Card>
 
