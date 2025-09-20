@@ -696,7 +696,9 @@ export default function HomeScreen({
               );
             }
 
-            const kycResponse = await fetch(`${apiBaseUrl}/api/v1/user/kyc`, {
+            // URL 객체로 안전하게 결합해서 // 이중 슬래시 방지
+            const kycUrl = new URL("/api/v1/user/kyc", apiBaseUrl);
+            const kycResponse = await fetch(kycUrl.toString(), {
               method: "PUT",
               headers: {
                 "Content-Type": "application/json",

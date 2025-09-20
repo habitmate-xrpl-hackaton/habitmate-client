@@ -146,7 +146,9 @@ export function useCredentialSetupModal() {
         throw new Error("액세스 토큰을 찾을 수 없습니다. 다시 로그인해주세요.");
       }
 
-      const kycResponse = await fetch(`${apiBaseUrl}/api/v1/user/kyc`, {
+      // URL 객체로 안전하게 결합하여 // 이중 슬래시 방지
+      const kycUrl = new URL("/api/v1/user/kyc", apiBaseUrl);
+      const kycResponse = await fetch(kycUrl.toString(), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
