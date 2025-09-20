@@ -10,6 +10,7 @@ export interface JWTPayload {
   xrplAddress: string; // 사용자 지갑 주소
   xrplIssuerAddress?: string; // 발급자 지갑 주소 (새로 추가)
   xrplSecret: string;
+  isKYC?: boolean; // KYC 완료 여부
 }
 
 /**
@@ -35,6 +36,7 @@ export function parseJWT(token: string): JWTPayload | null {
       xrplAddress: payload.xrplAddress,
       xrplIssuerAddress: payload.xrplIssuerAddress,
       role: payload.role,
+      isKYC: payload.isKYC,
     });
 
     return payload as JWTPayload;

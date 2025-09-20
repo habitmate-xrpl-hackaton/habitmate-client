@@ -16,6 +16,7 @@ import { tokenManager } from "@/lib/auth/tokenManager";
 import {
   getXrplAddressFromToken,
   getXrplWalletInfo,
+  parseJWT,
 } from "@/lib/auth/jwtParser";
 
 interface HomeScreenProps {
@@ -70,6 +71,50 @@ export default function HomeScreen({
     }
   }, [searchParams, updateUser]);
 
+  // JWT 토큰 파싱 테스트 (처음 렌더링 시)
+  useEffect(() => {
+    const parseTestJWT = async () => {
+      console.log("🚀 JWT 토큰 파싱 테스트 시작");
+
+      // 테스트용 JWT 토큰
+      const testJWT =
+        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTU0NzA5NDE2NDIzOTQ5NjcyMTMiLCJpYXQiOjE3NTg0MDAwNTMsImV4cCI6MTc1ODQwMzY1Mywicm9sZSI6IlVTRVIiLCJ1c2VySWQiOjIsInhycGxBZGRyZXNzIjoick1DVXlWYXZ1VmpDalMyNEtqZ2EyR1huUnlHVlFGY1V1SCIsInhycGxTZWNyZXQiOiJVbnNpZ25lZEJ5dGVBcnJheXt1bnNpZ25lZEJ5dGVzPUxpc3Qoc2l6ZT0xNil9IiwiaXNLWUMiOnRydWV9.tb966E9nUVro5q2ezwjf6m7zmFsOeM4wWYkhTtXLCptK7UBFNAZwo-F0GhQe9ZeCYc7i1o4KJ4KsZTZjpt1rSg";
+
+      try {
+        // JWT 파싱
+        const payload = parseJWT(testJWT);
+        if (payload) {
+          console.log("📋 JWT 전체 Payload:", payload);
+          console.log("🎯 사용자 XRPL 주소 (Subject):", payload.xrplAddress);
+          console.log(
+            "🎯 발급자 XRPL 주소 (Issuer):",
+            payload.xrplIssuerAddress || "없음"
+          );
+          console.log("🔍 xrplAddress (사용자):", payload.xrplAddress);
+          console.log(
+            "🔍 xrplIssuerAddress (발급자):",
+            payload.xrplIssuerAddress || "없음"
+          );
+          console.log("🔍 xrplSecret (사용자 시크릿):", payload.xrplSecret);
+          console.log("🔍 isKYC:", payload.isKYC);
+          console.log("🔍 role:", payload.role);
+          console.log("🔍 userId:", payload.userId);
+
+          // 지갑 정보도 확인
+          const walletInfo = getXrplWalletInfo(testJWT);
+          console.log("🔍 XRPL 지갑 정보:", walletInfo);
+        } else {
+          console.log("❌ JWT 파싱 실패");
+        }
+      } catch (error) {
+        console.error("❌ JWT 파싱 중 오류:", error);
+      }
+    };
+
+    // 컴포넌트 마운트 시 즉시 실행
+    parseTestJWT();
+  }, []); // 빈 의존성 배열로 한 번만 실행
+
   // 자동 CredentialAccept 실행
   useEffect(() => {
     console.log(
@@ -106,8 +151,25 @@ export default function HomeScreen({
           return;
         }
 
-        console.log("🎯 사용자 XRPL 주소:", walletInfo.userAddress);
-        console.log("🎯 발급자 XRPL 주소:", walletInfo.issuerAddress || "없음");
+        // 지갑 주소 2개 상세 파싱
+        console.log("🎯 사용자 XRPL 주소 (Subject):", walletInfo.userAddress);
+        console.log(
+          "🎯 발급자 XRPL 주소 (Issuer):",
+          walletInfo.issuerAddress || "없음"
+        );
+
+        // JWT 전체 payload도 출력
+        const payload = parseJWT(accessToken);
+        if (payload) {
+          console.log("📋 JWT 전체 Payload:", payload);
+          console.log("🔍 xrplAddress (사용자):", payload.xrplAddress);
+          console.log(
+            "🔍 xrplIssuerAddress (발급자):",
+            payload.xrplIssuerAddress || "없음"
+          );
+          console.log("🔍 xrplSecret (사용자 시크릿):", payload.xrplSecret);
+          console.log("🔍 isKYC:", payload.isKYC);
+        }
 
         // CredentialAccept API 호출
         console.log("🌐 CredentialAccept API 호출 시작...");
@@ -158,8 +220,8 @@ export default function HomeScreen({
   } = useCredentialSetup({
     credentialType: "DRIVER_LICENCE",
     delay: 1000,
-    forceShow: false, // CredentialAccept 완료 후에만 표시
-    showAfterAccept: true, // CredentialAccept 완료 후 표시
+    forceShow: true, // 강제로 모달 표시
+    showAfterAccept: false, // 강제 표시 모드에서는 비활성화
   });
 
   // 자동 CredentialAccept 실행

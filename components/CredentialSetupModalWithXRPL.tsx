@@ -133,22 +133,13 @@ export default function CredentialSetupModalWithXRPL({
             {/* Accept Button */}
             <Button
               onClick={handleAccept}
-              disabled={isLoading || !credentialAcceptCompleted}
-              className={`w-full font-medium py-3 px-6 rounded-xl transition-all duration-200 disabled:cursor-not-allowed ${
-                credentialAcceptCompleted
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
-                  : "bg-gray-300 text-gray-500"
-              }`}
+              disabled={isLoading}
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-6 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <div className="flex items-center space-x-2">
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   <span>Processing Credential...</span>
-                </div>
-              ) : !credentialAcceptCompleted ? (
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
-                  <span>Waiting for Credential Accept...</span>
                 </div>
               ) : (
                 <div className="flex items-center space-x-2">
