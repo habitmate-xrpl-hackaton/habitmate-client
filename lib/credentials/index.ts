@@ -10,6 +10,9 @@ export {
 } from "../escrow/escrowCreate";
 export type { EscrowCreateParams } from "../escrow/escrowCreate";
 
+// 통합 테스트를 위한 import
+import { acceptDriverLicense } from "./credentialAccept";
+
 // 통합 테스트를 위한 유틸리티 함수들
 export const XRPL_UTILS = {
   // DevNet 연결 정보
@@ -81,7 +84,6 @@ export async function runIntegratedTest() {
 
     // 2. Credential 수락
     console.log("\n📋 2단계: 드라이버 라이센스 크리덴셜 수락");
-    const { acceptDriverLicense } = await import("./credentialAccept");
     const credentialResult = await acceptDriverLicense(issuerSeed, subjectSeed);
 
     if (!credentialResult.success) {
