@@ -154,11 +154,6 @@ export function useCredentialSetupModal() {
           "Content-Type": "application/json",
           Authorization: accessToken, // Bearer 토큰 포함
         },
-        body: JSON.stringify({
-          userId: "current_user_id", // 실제 사용자 ID
-          verificationStatus: "pending",
-          timestamp: new Date().toISOString(),
-        }),
       });
       console.log("🔄 KYC API 호출 완료:", kycResponse);
 
