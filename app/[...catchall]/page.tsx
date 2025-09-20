@@ -53,6 +53,7 @@ function CatchAllContent({ params }: CatchAllPageProps) {
 
         const result = await handleTokensFromUrl({
           autoRedirect: false, // 수동으로 리디렉션 처리
+          keepQuery: true, // 쿼리를 지우지 않고 유지
           onSuccess: (tokenInfo) => {
             console.log("✅ CatchAll에서 토큰 처리 성공:", tokenInfo);
 
@@ -68,10 +69,8 @@ function CatchAllContent({ params }: CatchAllPageProps) {
             setStatus("success");
             setMessage("로그인 성공! 홈 화면으로 이동합니다.");
 
-            // 1초 후 홈으로 리디렉션
-            setTimeout(() => {
-              router.push("/home");
-            }, 1000);
+            // 바로 홈으로 이동
+            router.push("/home");
           },
           onError: (error) => {
             console.error("❌ CatchAll에서 토큰 처리 실패:", error);
