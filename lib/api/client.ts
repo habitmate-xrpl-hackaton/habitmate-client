@@ -4,6 +4,25 @@ import { ChallengeRequest } from "./types";
 // API 베이스 URL
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+// 인증 토큰을 가져오는 헬퍼 함수
+const getAuthHeaders = () => {
+  if (typeof window === "undefined") return {};
+
+  // Access Token은 sessionStorage에서 가져오기
+  const accessToken = sessionStorage.getItem("accessToken");
+
+  if (!accessToken) {
+    return {};
+  }
+
+  // Bearer 토큰 형태로 처리 (Bearer 접두사가 없으면 추가)
+  const bearerToken = accessToken.startsWith("Bearer ")
+    ? accessToken
+    : `Bearer ${accessToken}`;
+
+  return { Authorization: bearerToken };
+};
+
 // Challenge API 클라이언트
 export const challengeApi = {
   // 챌린지 생성 (SWR mutation용)

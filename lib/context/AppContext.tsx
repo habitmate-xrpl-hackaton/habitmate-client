@@ -39,6 +39,8 @@ export interface AppState {
     email: string;
     avatar: string;
     isLoggedIn: boolean;
+    accessToken?: string;
+    refreshToken?: string;
   };
   wallet: {
     isConnected: boolean;
@@ -376,6 +378,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const updateUser = (userData: Partial<AppState["user"]>) => {
+    // Access Token만 sessionStorage에 저장 (짧은 수명)
+    if (userData.accessToken) {
+      sessionStorage.setItem("accessToken", userData.accessToken);
+    }
+
+    // Refresh Token은 서버에서 httpOnly 쿠키로 관리하므로 클라이언트에서 저장하지 않음
+
+    // 로그아웃 시 Access Token만 제거
+    if (userData.isLoggedIn === false) {
+      sessionStorage.removeItem("accessToken");
+      // Refresh Token 쿠키는 서버에서 처리
+    }
+
     dispatch({ type: "UPDATE_USER", payload: userData });
   };
 

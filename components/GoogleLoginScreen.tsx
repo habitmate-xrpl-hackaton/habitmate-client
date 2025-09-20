@@ -10,6 +10,7 @@ import {
   imgMask2,
 } from "../imports/svg-hbl5y";
 import { useRouter } from "next/navigation";
+import { tokenManager } from "@/lib/auth/tokenManager";
 
 export default function GoogleLoginScreen() {
   const { updateUser } = useApp();
@@ -17,8 +18,26 @@ export default function GoogleLoginScreen() {
 
   const handleLogin = async () => {
     try {
-      console.log("🚀 로그인 시작...");
-      // 더미 사용자 정보로 로그인
+      console.log("🚀 Google OAuth2 로그인 시작...");
+
+      // XRPL API 서버의 Google OAuth2 엔드포인트로 리디렉션
+      const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+      // 콜백 URL 설정 (토큰 핸들러 페이지)
+      const callbackUrl = `${window.location.origin}/token-handler`;
+
+      const googleAuthUrl = `${apiBaseUrl}/oauth2/authorization/google?redirect_uri=${encodeURIComponent(
+        callbackUrl
+      )}`;
+
+      console.log("🔗 Google 인증 URL:", googleAuthUrl);
+      console.log("📋 콜백 URL:", callbackUrl);
+
+      window.location.href = googleAuthUrl;
+    } catch (error) {
+      console.error("💥 Google 로그인 에러:", error);
+
+      // 에러 발생 시 더미 로그인으로 폴백
       updateUser({
         isLoggedIn: true,
         name: "테스트 사용자",
@@ -26,8 +45,6 @@ export default function GoogleLoginScreen() {
         avatar: "",
       });
       router.push("/home");
-    } catch (error) {
-      console.error("💥 로그인 에러:", error);
     }
   };
 

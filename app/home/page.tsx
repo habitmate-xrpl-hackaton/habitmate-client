@@ -1,10 +1,11 @@
 "use client";
 
+import { Suspense } from "react";
 import HomeScreen from "@/components/HomeScreen";
 import { useApp } from "@/lib/context/AppContext";
 import { Toaster } from "sonner";
 
-export default function HomePage() {
+function HomePageContent() {
   const {
     state,
     navigateToScreen,
@@ -24,10 +25,14 @@ export default function HomePage() {
     disconnectWallet,
   };
 
+  return <HomeScreen {...commonProps} />;
+}
+
+export default function HomePage() {
   return (
-    <>
-      <HomeScreen {...commonProps} />
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomePageContent />
       <Toaster />
-    </>
+    </Suspense>
   );
 }

@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Camera, Users, Clock } from "lucide-react";
 import { Button } from "./ui/button";
 import { Progress } from "./ui/progress";
 import RightIcon from "../imports/RightIcon";
 import LeftIcon from "../imports/LeftIcon-13-1947";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import NotificationCenterScreen from "./NotificationCenterScreen";
 import CredentialSetupModalWithXRPL from "./CredentialSetupModalWithXRPL";
 import { useCredentialSetup } from "@/lib/credentials/useCredentialSetup";
+import { useApp } from "@/lib/context/AppContext";
 
 interface HomeScreenProps {
   navigateToScreen?: (screen: string, data?: any) => void;
@@ -21,6 +22,10 @@ export default function HomeScreen({
   appState,
   navigateToScreen,
 }: HomeScreenProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { updateUser } = useApp();
+
   const [activeTab, setActiveTab] = useState("today");
   const [showNotificationCenter, setShowNotificationCenter] = useState(false);
   const [touchStart, setTouchStart] = useState({ x: 0, y: 0 });
@@ -28,10 +33,39 @@ export default function HomeScreen({
   const [isDragging, setIsDragging] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [showProofPopup, setShowProofPopup] = useState(false);
+
+  // Google OAuth2 콜백 처리
+  useEffect(() => {
+    const accessToken = searchParams.get("access_token");
+    const userName = searchParams.get("user_name");
+    const userEmail = searchParams.get("user_email");
+
+    if (accessToken) {
+      console.log("🎉 Google OAuth2 로그인 성공!");
+      console.log("📋 사용자 정보:", {
+        hasAccessToken: !!accessToken,
+        userName,
+        userEmail,
+      });
+
+      // 사용자 정보 업데이트 (Refresh Token은 쿠키에서 관리)
+      updateUser({
+        isLoggedIn: true,
+        name: userName || "Google 사용자",
+        email: userEmail || "user@example.com",
+        avatar: "",
+        accessToken: accessToken || undefined,
+      });
+
+      // URL에서 토큰 파라미터 제거 (보안상)
+      const cleanUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+    }
+  }, [searchParams, updateUser]);
+
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
 
   // Credential Setup Hook
   const {
