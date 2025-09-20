@@ -127,11 +127,11 @@ export async function escrowCreateMPT(
 // 직접 실행 테스트
 if (require.main === module) {
   const testEscrow = async () => {
-    const sourceSeed = process.env.USER_SEED;
-    const destinationAddress = process.env.USER2_ADDRESS;
+    const sourceSeed = process.env.ADMIN_SEED;
+    const destinationAddress = process.env.USER_ADDRESS;
 
     if (!sourceSeed || !destinationAddress) {
-      console.error("❌ 환경변수 USER_SEED, USER2_ADDRESS가 필요합니다.");
+      console.error("❌ 환경변수 ADMIN_SEED, USER_ADDRESS가 필요합니다.");
       return;
     }
 
