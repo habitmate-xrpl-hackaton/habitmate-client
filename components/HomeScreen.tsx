@@ -10,6 +10,8 @@ import LeftIcon from "../imports/LeftIcon-13-1947";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import NotificationCenterScreen from "./NotificationCenterScreen";
+import CredentialSetupModalWithXRPL from "./CredentialSetupModalWithXRPL";
+import { useCredentialSetup } from "@/lib/credentials/useCredentialSetup";
 
 interface HomeScreenProps {
   navigateToScreen?: (screen: string, data?: any) => void;
@@ -32,6 +34,21 @@ export default function HomeScreen({
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { data: session } = useSession();
+
+  // Credential Setup Hook
+  const {
+    shouldShowModal,
+    isLoading: credentialLoading,
+    credentialType,
+    issuerSeed,
+    subjectSeed,
+    markAsCompleted,
+  } = useCredentialSetup({
+    credentialType: "DRIVER_LICENCE",
+    delay: 1000,
+    // 개발 환경에서 강제 표시하려면 forceShow: true 추가
+    forceShow: false,
+  });
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStart({
@@ -619,6 +636,24 @@ export default function HomeScreen({
           </div>
         </>
       )}
+
+      {/* Credential Setup Modal */}
+      <CredentialSetupModalWithXRPL
+        isOpen={shouldShowModal}
+        onClose={() => {
+          markAsCompleted();
+        }}
+        onAccept={() => {
+          console.log(
+            "✅ XRPL Credential accepted for user:",
+            session?.user?.email
+          );
+          markAsCompleted();
+        }}
+        issuerSeed={issuerSeed}
+        subjectSeed={subjectSeed}
+        credentialType={credentialType}
+      />
     </div>
   );
 }

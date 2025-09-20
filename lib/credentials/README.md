@@ -170,6 +170,91 @@ Issuer → CredentialAccept → Subject
 - 지갑 주소와 시드가 올바른지 확인
 - 트랜잭션 결과를 자세히 로그로 확인
 
+## 🎨 UI 컴포넌트
+
+### Credential Setup Modal
+
+프로젝트에는 이미지와 동일한 디자인의 XRPL Credential Setup 모달이 포함되어 있습니다:
+
+```typescript
+import CredentialSetupModal, {
+  useCredentialSetupModal,
+} from "@/components/CredentialSetupModal";
+import CredentialSetupModalWithXRPL from "@/components/CredentialSetupModalWithXRPL";
+
+// 기본 사용법
+const modal = useCredentialSetupModal();
+
+// XRPL 연동 사용법
+<CredentialSetupModalWithXRPL
+  isOpen={isOpen}
+  onClose={closeModal}
+  onAccept={handleAccept}
+  issuerSeed={adminSeed}
+  subjectSeed={userSeed}
+  credentialType="DRIVER_LICENCE"
+/>;
+```
+
+### 예제 컴포넌트
+
+`components/CredentialSetupExample.tsx`에서 실제 사용 예제를 확인할 수 있습니다.
+
+### 자동 모달 표시 (로그인 후 첫 방문)
+
+HomeScreen에서 로그인 후 첫 방문 시에만 자동으로 모달이 표시됩니다:
+
+```typescript
+import { useCredentialSetup } from "@/lib/credentials/useCredentialSetup";
+
+function HomeScreen() {
+  const {
+    shouldShowModal,
+    credentialType,
+    issuerSeed,
+    subjectSeed,
+    markAsCompleted,
+  } = useCredentialSetup({
+    credentialType: "DRIVER_LICENCE",
+    delay: 1000, // 1초 후 표시
+    forceShow: false, // 개발용: true로 설정하면 강제 표시
+  });
+
+  return (
+    <>
+      {/* HomeScreen content */}
+
+      <CredentialSetupModalWithXRPL
+        isOpen={shouldShowModal}
+        onClose={markAsCompleted}
+        onAccept={markAsCompleted}
+        issuerSeed={issuerSeed}
+        subjectSeed={subjectSeed}
+        credentialType={credentialType}
+      />
+    </>
+  );
+}
+```
+
+### 디버그 도구
+
+개발 환경에서 Credential Setup 상태를 관리할 수 있는 디버그 컴포넌트:
+
+```typescript
+import CredentialSetupDebug from "@/components/CredentialSetupDebug";
+
+// 개발 환경에서만 사용
+<CredentialSetupDebug />;
+```
+
+**디버그 함수들:**
+
+- `credentialSetupDebug.getStatus()`: 현재 상태 확인
+- `credentialSetupDebug.resetAll()`: 모든 데이터 리셋
+- `credentialSetupDebug.resetForUser(email)`: 특정 사용자 리셋
+- `credentialSetupDebug.forceShow(email)`: 강제 모달 표시
+
 ## 📚 추가 리소스
 
 - [XRPL DevNet Faucet](https://xrpl.org/xrp-testnet-faucet.html)

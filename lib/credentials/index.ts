@@ -81,6 +81,7 @@ export async function runIntegratedTest() {
 
     // 2. Credential 수락
     console.log("\n📋 2단계: 드라이버 라이센스 크리덴셜 수락");
+    const { acceptDriverLicense } = await import("./credentialAccept");
     const credentialResult = await acceptDriverLicense(issuerSeed, subjectSeed);
 
     if (!credentialResult.success) {

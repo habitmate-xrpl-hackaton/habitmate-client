@@ -1,10 +1,9 @@
 import { Client, Wallet, Transaction } from "xrpl";
 import { encodeForSigning, encode } from "ripple-binary-codec";
 import { sign as kpSign, deriveKeypair } from "ripple-keypairs";
-import path from "path";
-import dotenv from "dotenv";
 
-dotenv.config({ path: path.join(__dirname, "..", "..", ".env.local") });
+// Next.js 환경변수를 사용 (dotenv 대신)
+// process.env는 Next.js에서 자동으로 로드됨
 
 export interface CredentialAcceptParams {
   issuerSeed: string;
