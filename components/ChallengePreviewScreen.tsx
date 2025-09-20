@@ -95,7 +95,7 @@ export default function ChallengePreviewScreen({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigateToScreen("create-challenge")}
+            onClick={() => window.history.back()}
             className="w-12 h-12 p-0 bg-white border border-[#eaecf0] rounded-2xl hover:bg-gray-50"
           >
             <ArrowLeft className="h-6 w-6" />

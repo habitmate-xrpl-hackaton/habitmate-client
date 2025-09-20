@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { Camera, Users, Clock } from "lucide-react";
@@ -7,14 +9,19 @@ import RightIcon from "../imports/RightIcon";
 import LeftIcon from "../imports/LeftIcon-13-1947";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import NotificationCenterScreen from "./NotificationCenterScreen";
 
 interface HomeScreenProps {
   navigateToScreen?: (screen: string, data?: any) => void;
   appState?: any;
 }
 
-export default function HomeScreen({ appState }: HomeScreenProps) {
+export default function HomeScreen({
+  appState,
+  navigateToScreen,
+}: HomeScreenProps) {
   const [activeTab, setActiveTab] = useState("today");
+  const [showNotificationCenter, setShowNotificationCenter] = useState(false);
   const [touchStart, setTouchStart] = useState({ x: 0, y: 0 });
   const [touchEnd, setTouchEnd] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -253,6 +260,25 @@ export default function HomeScreen({ appState }: HomeScreenProps) {
     setSelectedDay(null);
   };
 
+  // NotificationCenterScreen을 보여주는 경우
+  if (showNotificationCenter) {
+    return (
+      <NotificationCenterScreen
+        navigateToScreen={(screen, data) => {
+          if (screen === "back") {
+            setShowNotificationCenter(false);
+          } else if (navigateToScreen) {
+            navigateToScreen(screen, data);
+          } else {
+            // fallback to router if navigateToScreen is not available
+            router.push(`/${screen}`);
+          }
+        }}
+        appState={appState || {}}
+      />
+    );
+  }
+
   return (
     <div
       ref={containerRef}
@@ -285,7 +311,7 @@ export default function HomeScreen({ appState }: HomeScreenProps) {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => router.push("/notification-center")}
+            onClick={() => setShowNotificationCenter(true)}
             className="w-12 h-12 p-0 rounded-2xl hover:bg-gray-50 cursor-pointer"
           >
             <div className="w-12 h-12">

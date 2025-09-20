@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import React, { useState } from "react";
 import { Search, X, ArrowLeft } from "lucide-react";
@@ -243,8 +245,8 @@ export default function SearchScreen({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigateToScreen("feed")}
-            className="p-1.5 hover:bg-gray-100"
+            onClick={() => navigateToScreen("back")}
+            className="p-1.5 hover:bg-gray-100 cursor-pointer"
           >
             <ArrowLeft className="h-6 w-6 text-[#040415]" />
           </Button>
@@ -275,8 +277,8 @@ export default function SearchScreen({
 
           <Button
             variant="ghost"
-            onClick={() => navigateToScreen("feed")}
-            className="text-[#3843ff] hover:bg-[#f6f9ff]"
+            onClick={() => navigateToScreen("back")}
+            className="text-[#3843ff] hover:bg-[#f6f9ff] cursor-pointer"
           >
             Cancel
           </Button>

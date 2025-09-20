@@ -34,7 +34,8 @@ export default function GlobalBottomNavigationWrapper() {
     isModalOpen ||
     pathname === "/uploadproof" ||
     pathname === "/createchallenge" ||
-    pathname === "/challenge-detail";
+    pathname === "/challenge-detail" ||
+    pathname === "/payment-confirmation";
   if (hideNavigation) {
     return null;
   }

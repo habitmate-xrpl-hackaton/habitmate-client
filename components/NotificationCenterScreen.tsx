@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   ArrowLeft,
@@ -132,8 +134,8 @@ export default function NotificationCenterScreen({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => window.history.back()}
-            className="p-2"
+            onClick={() => navigateToScreen("back")}
+            className="p-2 cursor-pointer"
           >
             <ArrowLeft className="h-6 w-6" />
           </Button>

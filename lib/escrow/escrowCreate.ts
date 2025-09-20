@@ -34,8 +34,6 @@ export async function escrowCreate(params: EscrowCreateParams) {
       Destination: params.destinationAddress, // 목적지
       Amount: params.amount,
       ...(params.finishAfter && { FinishAfter: params.finishAfter }),
-      ...(params.cancelAfter && { CancelAfter: params.cancelAfter }),
-      ...(params.condition && { Condition: params.condition }),
     } as any;
 
     // 1) autofill → 기본 필드 채움 (Sequence, Fee 등)
@@ -90,7 +88,8 @@ export async function escrowCreateXRP(
   sourceSeed: string,
   destinationAddress: string,
   amountXRP: string,
-  finishAfterSeconds: number = 30,
+  // finishAfterSeconds: number = 30,
+  finishAfterSeconds: number = 1,
   cancelAfterSeconds: number = 120
 ) {
   const amountDrops = (parseFloat(amountXRP) * 1000000).toString(); // XRP to drops

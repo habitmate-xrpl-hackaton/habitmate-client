@@ -25,7 +25,6 @@ export interface ChallengeRequest {
   proof_type: "PHOTO" | "VIDEO" | "TEXT";
   rules: string[];
   max_participants: number;
-  image_url?: string;
 }
 
 export interface ChallengeResponse {

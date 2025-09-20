@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Progress } from "./ui/progress";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface ChallengeDetailScreenProps {
   navigateToScreen: (screen: string, data?: any) => void;
@@ -14,6 +15,7 @@ export default function ChallengeDetailScreen({
   navigateToScreen,
   appState,
 }: ChallengeDetailScreenProps) {
+  const router = useRouter();
   const defaultChallenge = {
     id: 1,
     title: "Morning Meditation Challenge",
@@ -89,8 +91,8 @@ export default function ChallengeDetailScreen({
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigateToScreen("challenges")}
-              className="w-12 h-12 p-0 bg-white border border-[#eaecf0] rounded-2xl hover:bg-gray-50 mr-4"
+              onClick={() => window.history.back()}
+              className="w-12 h-12 p-0 bg-white border border-[#eaecf0] rounded-2xl hover:bg-gray-50 mr-4 cursor-pointer"
             >
               <ArrowLeft className="h-5 w-5 text-[#040415]" />
             </Button>
@@ -368,9 +370,7 @@ export default function ChallengeDetailScreen({
         style={{ boxShadow: "0px -4px 16px 0px rgba(35, 44, 93, 0.08)" }}
       >
         <Button
-          onClick={() =>
-            navigateToScreen("payment-confirmation", { challenge })
-          }
+          onClick={() => router.push("/payment-confirmation")}
           className="w-full bg-[#3843ff] hover:bg-[#6b73ff] text-white py-4 rounded-xl font-semibold text-base transition-all cursor-pointer"
         >
           Join Challenge

@@ -31,8 +31,6 @@ import { Calendar as CalendarComponent } from "./ui/calendar";
 import { toast } from "sonner";
 import { apiClient, ChallengeRequest } from "@/lib/api";
 import useSWRMutation from "swr/mutation";
-import { uploadImage } from "@/lib/supabase";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface CreateChallengeScreenProps {
@@ -45,16 +43,6 @@ export default function CreateChallengeScreen({
   addChallenge,
 }: CreateChallengeScreenProps) {
   const [challengeType, setChallengeType] = useState<"solo" | "group">("solo");
-  const [uploadedImage, setUploadedImage] = useState<{
-    file: File | null;
-    preview: string | null;
-    url: string | null;
-  }>({
-    file: null,
-    preview: null,
-    url: null,
-  });
-  const [isUploading, setIsUploading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -86,90 +74,6 @@ export default function CreateChallengeScreen({
     "/api/challenges",
     apiClient.challenges.create
   );
-
-  // 이미지 업로드 핸들러
-  const handleImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    console.log("🖼️ 이미지 업로드 시작:", file.name, file.size, file.type);
-
-    // 파일 크기 체크 (5MB 제한)
-    if (file.size > 5 * 1024 * 1024) {
-      console.error("❌ 파일 크기 초과:", file.size);
-      toast.error("파일 크기는 5MB를 초과할 수 없습니다.");
-      return;
-    }
-
-    // 이미지 파일 타입 체크
-    if (!file.type.startsWith("image/")) {
-      console.error("❌ 잘못된 파일 타입:", file.type);
-      toast.error("이미지 파일만 업로드 가능합니다.");
-      return;
-    }
-
-    // 미리보기 생성
-    const preview = URL.createObjectURL(file);
-    setUploadedImage((prev) => ({
-      ...prev,
-      file,
-      preview,
-    }));
-
-    // Supabase에 바로 업로드
-    setIsUploading(true);
-    console.log("🚀 Supabase 업로드 시작...");
-
-    try {
-      const result = await uploadImage(file);
-      console.log("📤 업로드 결과:", result);
-
-      if (result.success) {
-        console.log("✅ 업로드 성공!");
-        console.log("🔗 이미지 URL:", (result as any).url);
-        console.log("📁 파일 경로:", (result as any).path);
-
-        setUploadedImage((prev) => ({
-          ...prev,
-          url: (result as any).url || null,
-        }));
-        toast.success("이미지가 성공적으로 업로드되었습니다!");
-      } else {
-        console.error("❌ 업로드 실패:", (result as any).error);
-        toast.error("이미지 업로드에 실패했습니다.");
-        setUploadedImage({
-          file: null,
-          preview: null,
-          url: null,
-        });
-      }
-    } catch (error) {
-      console.error("💥 업로드 에러:", error);
-      toast.error("이미지 업로드 중 오류가 발생했습니다.");
-      setUploadedImage({
-        file: null,
-        preview: null,
-        url: null,
-      });
-    } finally {
-      setIsUploading(false);
-      console.log("🏁 업로드 프로세스 완료");
-    }
-  };
-
-  // 이미지 제거 핸들러
-  const handleImageRemove = () => {
-    if (uploadedImage.preview) {
-      URL.revokeObjectURL(uploadedImage.preview);
-    }
-    setUploadedImage({
-      file: null,
-      preview: null,
-      url: null,
-    });
-  };
 
   const handleInputChange = (field: string, value: string) => {
     // participationFee 필드에 대해서만 정규식으로 1~100 범위 체크
@@ -354,11 +258,9 @@ export default function CreateChallengeScreen({
         ],
         max_participants:
           challengeType === "group" ? parseInt(formData.maxParticipants) : 1,
-        image_url: uploadedImage.url || undefined, // 업로드된 이미지 URL 추가
       };
 
       console.log("📋 API 요청 데이터 준비 완료:", apiData);
-      console.log("🖼️ 포함된 이미지 URL:", uploadedImage.url);
 
       // SWR mutation으로 API 호출
       const result = (await createChallenge(apiData)) as any;
@@ -1027,62 +929,6 @@ export default function CreateChallengeScreen({
                   <SelectItem value="photo">📸 Photo Upload</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
-
-            {/* Challenge Image Upload */}
-            <div className="mt-4">
-              <Label>Challenge Image</Label>
-              <div className="mt-2">
-                {uploadedImage.preview ? (
-                  <div className="relative">
-                    <Image
-                      src={uploadedImage.preview}
-                      alt="Challenge preview"
-                      className="w-full h-48 object-contain rounded-lg border border-[#eaecf0]"
-                      width={366}
-                      height={143}
-                    />
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="sm"
-                      onClick={handleImageRemove}
-                      className="absolute top-2 right-2"
-                      disabled={isUploading}
-                    >
-                      ✕
-                    </Button>
-                    {isUploading && (
-                      <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
-                        <div className="text-white text-sm">업로드 중...</div>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="border-2 border-dashed border-[#eaecf0] rounded-lg p-6 text-center">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                      id="image-upload"
-                      disabled={isUploading}
-                    />
-                    <label
-                      htmlFor="image-upload"
-                      className="cursor-pointer flex flex-col items-center space-y-2"
-                    >
-                      <div className="text-4xl">📷</div>
-                      <div className="text-sm text-gray-600">
-                        {isUploading ? "업로드 중..." : "이미지를 업로드하세요"}
-                      </div>
-                      <div className="text-xs text-gray-400">
-                        JPG, PNG, GIF (최대 5MB)
-                      </div>
-                    </label>
-                  </div>
-                )}
-              </div>
             </div>
           </Card>
 

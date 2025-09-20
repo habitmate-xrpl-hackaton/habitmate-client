@@ -17,6 +17,7 @@ import { Badge } from "./ui/badge";
 import useSWR from "swr";
 import ky from "ky";
 import { log } from "console";
+import { useRouter } from "next/navigation";
 
 interface ChallengesScreenProps {
   navigateToScreen: (screen: string, data?: any) => void;
@@ -30,6 +31,7 @@ export default function ChallengesScreen({
   // Check if we should open Brand Challenges tab based on navigation data
   const initialTab = appState?.selectedTab || "group";
   const [activeTab, setActiveTab] = useState(initialTab);
+  const router = useRouter();
   // const { data } = useSWR("/api/getChallenges");
   // console.log("data : ", data);
   // const { data: logs } = useSWR(`/api/getChallenges`);
@@ -353,10 +355,9 @@ export default function ChallengesScreen({
       {/* CTA Button */}
       <div className="flex justify-end">
         <Button
-          className="bg-[#3843ff] hover:bg-[#6b73ff] text-white px-6 py-2.5 rounded-xl font-medium transition-all"
-          onClick={(e) => {
-            e.stopPropagation();
-            navigateToScreen("challenge-detail", { challenge });
+          className="bg-[#3843ff] hover:bg-[#6b73ff] text-white px-6 py-2.5 rounded-xl font-medium transition-all cursor-pointer"
+          onClick={() => {
+            router.push("/challenge-detail");
           }}
         >
           View Details
@@ -373,8 +374,8 @@ export default function ChallengesScreen({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigateToScreen("explore")}
-            className="w-12 h-12 p-0 bg-white border border-[#eaecf0] rounded-2xl hover:bg-gray-50"
+            onClick={() => window.history.back()}
+            className="w-12 h-12 p-0 bg-white border border-[#eaecf0] rounded-2xl hover:bg-gray-50 cursor-pointer"
           >
             <ArrowLeft className="h-5 w-5 text-[#040415]" />
           </Button>
@@ -386,8 +387,8 @@ export default function ChallengesScreen({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigateToScreen("create-challenge")}
-            className="w-12 h-12 p-0 bg-white border border-[#eaecf0] rounded-2xl hover:bg-gray-50"
+            onClick={() => router.push("/createchallenge")}
+            className="w-12 h-12 p-0 bg-white border border-[#eaecf0] rounded-2xl hover:bg-gray-50 cursor-pointer"
           >
             <Plus className="h-5 w-5 text-[#040415]" />
           </Button>
@@ -395,7 +396,7 @@ export default function ChallengesScreen({
       </div>
 
       {/* Content */}
-      <div className="flex-1 px-6 py-4 pb-6">
+      <div className="flex-1 px-6 pt-4 pb-18">
         {/* Tab Selector */}
         <div className="bg-[#eaecf0] p-0.5 rounded-2xl mb-6 flex">
           <div
@@ -405,7 +406,7 @@ export default function ChallengesScreen({
           >
             <button
               onClick={() => setActiveTab("group")}
-              className={`text-sm font-medium w-full text-center transition-colors ${
+              className={`text-sm font-medium w-full text-center transition-colors cursor-pointer ${
                 activeTab === "group" ? "text-[#040415]" : "text-[#686873]"
               }`}
             >
@@ -419,7 +420,7 @@ export default function ChallengesScreen({
           >
             <button
               onClick={() => setActiveTab("brand")}
-              className={`text-sm font-medium w-full text-center transition-colors ${
+              className={`text-sm font-medium w-full text-center transition-colors cursor-pointer ${
                 activeTab === "brand" ? "text-[#040415]" : "text-[#686873]"
               }`}
             >

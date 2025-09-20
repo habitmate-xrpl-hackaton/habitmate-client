@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { Search, Bell, Heart, MessageCircle, Share, Plus } from "lucide-react";
@@ -5,12 +7,16 @@ import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { HashtagList } from "./HashtagChip";
+import SearchScreen from "./SearchScreen";
+import NotificationCenterScreen from "./NotificationCenterScreen";
 
 interface FeedScreenProps {
   navigateToScreen: (screen: string, data?: any) => void;
 }
 
 export default function FeedScreen({ navigateToScreen }: FeedScreenProps) {
+  const [showSearchScreen, setShowSearchScreen] = useState(false);
+  const [showNotificationCenter, setShowNotificationCenter] = useState(false);
   const [likedPosts, setLikedPosts] = useState<number[]>([]);
   const [followedUsers, setFollowedUsers] = useState<number[]>([]);
 
@@ -274,6 +280,38 @@ export default function FeedScreen({ navigateToScreen }: FeedScreenProps) {
     },
   ];
 
+  // SearchScreen을 보여주는 경우
+  if (showSearchScreen) {
+    return (
+      <SearchScreen
+        navigateToScreen={(screen, data) => {
+          if (screen === "back") {
+            setShowSearchScreen(false);
+          } else {
+            navigateToScreen(screen, data);
+          }
+        }}
+        appState={{}}
+      />
+    );
+  }
+
+  // NotificationCenterScreen을 보여주는 경우
+  if (showNotificationCenter) {
+    return (
+      <NotificationCenterScreen
+        navigateToScreen={(screen, data) => {
+          if (screen === "back") {
+            setShowNotificationCenter(false);
+          } else {
+            navigateToScreen(screen, data);
+          }
+        }}
+        appState={{}}
+      />
+    );
+  }
+
   return (
     <div
       ref={containerRef}
@@ -300,16 +338,16 @@ export default function FeedScreen({ navigateToScreen }: FeedScreenProps) {
             <Button
               variant="ghost"
               size="sm"
-              className="p-1.5 hover:bg-gray-100"
-              onClick={() => navigateToScreen("search")}
+              className="p-1.5 hover:bg-gray-100 cursor-pointer"
+              onClick={() => setShowSearchScreen(true)}
             >
               <Search className="h-6 w-6 text-black" />
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              className="p-1.5 hover:bg-gray-100 relative"
-              onClick={() => navigateToScreen("notification-center")}
+              className="p-1.5 hover:bg-gray-100 relative cursor-pointer"
+              onClick={() => setShowNotificationCenter(true)}
             >
               <Bell className="h-6 w-6 text-black" />
               <div className="absolute right-0 top-0 w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-white"></div>

@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import React, { useState } from "react";
 import {
@@ -99,7 +101,7 @@ export default function PaymentConfirmationScreen({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigateToScreen("challenges")}
+            onClick={() => window.history.back()}
             className="w-12 h-12 p-0 bg-white border border-[#eaecf0] rounded-2xl hover:bg-gray-50 mr-4"
           >
             <ArrowLeft className="h-5 w-5 text-[#040415]" />
@@ -330,7 +332,7 @@ export default function PaymentConfirmationScreen({
               {/* OK Button */}
               <Button
                 onClick={handleModalOk}
-                className="w-full bg-[#3843ff] hover:bg-[#6b73ff] text-white py-3 rounded-xl font-semibold transition-all"
+                className="w-full bg-[#3843ff] hover:bg-[#6b73ff] text-white py-3 rounded-xl font-semibold transition-all cursor-pointer"
               >
                 Got it!
               </Button>
