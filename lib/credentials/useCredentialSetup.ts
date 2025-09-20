@@ -71,8 +71,9 @@ export function useCredentialSetup(options: CredentialSetupOptions = {}) {
     isLoading,
     session: { user: { email: "test@example.com" } }, // 더미 세션
     credentialType,
-    issuerSeed: issuerSeed || process.env.NEXT_PUBLIC_ADMIN_SEED,
-    subjectSeed: subjectSeed || process.env.NEXT_PUBLIC_USER_SEED,
+    // 보안상 시드는 클라이언트에서 사용하지 않음
+    issuerSeed: undefined,
+    subjectSeed: undefined,
     markAsCompleted,
     resetCredentialSetup,
   };

@@ -32,26 +32,7 @@ export default function CredentialSetupModalWithXRPL({
     setError(null);
 
     try {
-      console.log("🚀 XRPL Credential Accept 시작...");
-      console.log("📋 환경변수 확인:", {
-        issuerSeed: issuerSeed ? `${issuerSeed.substring(0, 10)}...` : "없음",
-        subjectSeed: subjectSeed
-          ? `${subjectSeed.substring(0, 10)}...`
-          : "없음",
-        credentialType,
-      });
-
-      // 환경변수에서 시드 가져오기
-      const adminSeed = issuerSeed || process.env.NEXT_PUBLIC_ADMIN_SEED;
-      const userSeed = subjectSeed || process.env.NEXT_PUBLIC_USER_SEED;
-
-      if (!adminSeed || !userSeed) {
-        throw new Error(
-          "XRPL 지갑 시드가 설정되지 않았습니다. 환경변수를 확인해주세요."
-        );
-      }
-
-      // 브라우저 환경에서는 시뮬레이션 실행
+      // 보안상 클라이언트에서는 시뮬레이션만 실행
       if (typeof window !== "undefined") {
         console.log("🌐 브라우저 환경에서 시뮬레이션 실행");
 
@@ -70,30 +51,16 @@ export default function CredentialSetupModalWithXRPL({
         return;
       }
 
-      // 서버사이드에서만 실제 XRPL 트랜잭션 실행
-      const { credentialAccept } = await import(
-        "@/lib/credentials/credentialAccept"
-      );
+      // 보안상 모든 환경에서 시뮬레이션 실행
+      console.log("🔒 보안상 실제 XRPL 트랜잭션은 실행되지 않습니다");
 
-      const result = await credentialAccept({
-        issuerSeed: adminSeed,
-        subjectSeed: userSeed,
-        credentialType,
+      // 시뮬레이션 성공
+      toast.success("XRPL Credential accepted successfully! 🎉", {
+        description: "Simulation mode - 실제 배포 시 서버에서 처리됩니다",
       });
 
-      if (result.success) {
-        console.log("✅ XRPL Credential Accept 성공!");
-        console.log("📋 결과:", result);
-
-        toast.success("XRPL Credential accepted successfully! 🎉", {
-          description: `Transaction Hash: ${result.txHash}`,
-        });
-
-        onAccept?.();
-        onClose();
-      } else {
-        throw new Error(result.error || "Credential Accept failed");
-      }
+      onAccept?.();
+      onClose();
     } catch (error) {
       console.error("❌ Credential Accept 실패:", error);
       const errorMessage =
