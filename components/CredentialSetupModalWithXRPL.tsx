@@ -14,6 +14,7 @@ interface CredentialSetupModalWithXRPLProps {
   issuerSeed?: string;
   subjectSeed?: string;
   credentialType?: string;
+  credentialAcceptCompleted?: boolean;
 }
 
 export default function CredentialSetupModalWithXRPL({
@@ -23,6 +24,7 @@ export default function CredentialSetupModalWithXRPL({
   issuerSeed,
   subjectSeed,
   credentialType = "DRIVER_LICENCE",
+  credentialAcceptCompleted = false,
 }: CredentialSetupModalWithXRPLProps) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);

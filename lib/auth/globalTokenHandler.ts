@@ -8,6 +8,7 @@ export interface TokenHandlerOptions {
   onSuccess?: (tokenInfo: any) => void;
   onError?: (error: string) => void;
   onNoTokens?: () => void;
+  keepQuery?: boolean; // true면 URL 쿼리를 유지
 }
 
 /**
@@ -22,6 +23,7 @@ export async function handleTokensFromUrl(options: TokenHandlerOptions = {}) {
     onSuccess,
     onError,
     onNoTokens,
+    keepQuery = false,
   } = options;
 
   try {
@@ -85,11 +87,10 @@ export async function handleTokensFromUrl(options: TokenHandlerOptions = {}) {
     // 성공 콜백 실행
     onSuccess?.(tokenInfo);
 
-    // URL에서 토큰 파라미터 제거 (보안상)
-    if (typeof window !== "undefined") {
+    // URL에서 토큰 파라미터 제거 (보안상) - 단, keepQuery가 false일 때만
+    if (!keepQuery && typeof window !== "undefined") {
       const cleanUrl = window.location.pathname;
       window.history.replaceState({}, document.title, cleanUrl);
-      console.log("🧹 URL 정리 완료:", cleanUrl);
     }
 
     // 자동 리디렉션

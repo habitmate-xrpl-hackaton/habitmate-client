@@ -4,12 +4,14 @@ import React from "react";
 import { X, CheckCircle, Shield, Link } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
+import { tokenManager } from "@/lib/auth/tokenManager";
 
 interface CredentialSetupModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAccept: () => void;
   isLoading?: boolean;
+  credentialAcceptCompleted?: boolean;
 }
 
 export default function CredentialSetupModal({
@@ -17,6 +19,7 @@ export default function CredentialSetupModal({
   onClose,
   onAccept,
   isLoading = false,
+  credentialAcceptCompleted = false,
 }: CredentialSetupModalProps) {
   if (!isOpen) return null;
 
@@ -59,18 +62,27 @@ export default function CredentialSetupModal({
             {/* Accept Button */}
             <Button
               onClick={onAccept}
-              disabled={isLoading}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-6 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isLoading || !credentialAcceptCompleted}
+              className={`w-full font-medium py-3 px-6 rounded-xl transition-all duration-200 disabled:cursor-not-allowed ${
+                credentialAcceptCompleted
+                  ? "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+                  : "bg-gray-300 text-gray-500"
+              }`}
             >
               {isLoading ? (
                 <div className="flex items-center space-x-2">
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Processing...</span>
+                  <span>Processing KYC & Credential...</span>
+                </div>
+              ) : !credentialAcceptCompleted ? (
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                  <span>Waiting for Credential Accept...</span>
                 </div>
               ) : (
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="h-4 w-4" />
-                  <span>Accept Credential</span>
+                  <span>Complete KYC & Accept Credential</span>
                 </div>
               )}
             </Button>
@@ -121,21 +133,68 @@ export function useCredentialSetupModal() {
   const handleAccept = async () => {
     setIsLoading(true);
     try {
-      // Here you would integrate with your credentialAccept function
+      console.log("🚀 KYC 인증 및 XRPL Credential Accept 시작...");
+
+      // 1. KYC API 호출
+      const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+      console.log("🔍 API Base URL:", apiBaseUrl);
+
+      // sessionStorage에서 직접 확인
+      const directToken = sessionStorage.getItem("accessToken");
+      console.log("🔍 sessionStorage에서 직접 가져온 토큰:", directToken);
+
+      // 액세스 토큰 가져오기
+      console.log("🔍 토큰 매니저에서 액세스 토큰 가져오는 중...");
+      const accessToken = await tokenManager.getAccessToken();
+      console.log("🔄 액세스 토큰:", accessToken);
+
+      if (!accessToken) {
+        console.error("❌ 액세스 토큰이 없습니다!");
+        console.log(
+          "🔍 sessionStorage 직접 확인:",
+          sessionStorage.getItem("accessToken")
+        );
+        throw new Error("액세스 토큰을 찾을 수 없습니다. 다시 로그인해주세요.");
+      }
+
+      // URL 객체로 안전하게 결합하여 // 이중 슬래시 방지
+      const kycUrl = new URL("/api/v1/user/kyc", apiBaseUrl);
+      const kycResponse = await fetch(kycUrl.toString(), {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: accessToken, // Bearer 토큰 포함
+        },
+      });
+      console.log("🔄 KYC API 호출 완료:", kycResponse);
+
+      if (!kycResponse.ok) {
+        throw new Error(
+          `KYC API 호출 실패: ${kycResponse.status} ${kycResponse.statusText}`
+        );
+      }
+
+      const kycResult = await kycResponse.json();
+      console.log("✅ KYC API 호출 완료:", kycResult);
+
+      // 2. XRPL Credential Accept (기존 로직)
       console.log("🚀 XRPL Credential Accept 시작...");
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // 실제 credentialAccept 함수 호출 (필요시)
+      // await credentialAccept({...});
 
-      console.log("✅ XRPL Credential Accept 완료!");
+      // 시뮬레이션
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      console.log("✅ 전체 프로세스 완료!");
       closeModal();
 
-      // You can add success toast here
-      // toast.success("XRPL Credential accepted successfully!");
+      // 성공 토스트 (필요시)
+      // toast.success("KYC 인증 및 Credential 설정이 완료되었습니다!");
     } catch (error) {
-      console.error("❌ Credential Accept 실패:", error);
-      // You can add error toast here
-      // toast.error("Failed to accept credential. Please try again.");
+      console.error("❌ 프로세스 실패:", error);
+      // 에러 토스트 (필요시)
+      // toast.error("인증 과정에서 오류가 발생했습니다. 다시 시도해주세요.");
     } finally {
       setIsLoading(false);
     }

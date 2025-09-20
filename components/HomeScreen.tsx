@@ -12,6 +12,12 @@ import NotificationCenterScreen from "./NotificationCenterScreen";
 import CredentialSetupModalWithXRPL from "./CredentialSetupModalWithXRPL";
 import { useCredentialSetup } from "@/lib/credentials/useCredentialSetup";
 import { useApp } from "@/lib/context/AppContext";
+import { tokenManager } from "@/lib/auth/tokenManager";
+import {
+  getXrplAddressFromToken,
+  getXrplWalletInfo,
+  parseJWT,
+} from "@/lib/auth/jwtParser";
 
 interface HomeScreenProps {
   navigateToScreen?: (screen: string, data?: any) => void;
@@ -33,6 +39,8 @@ export default function HomeScreen({
   const [isDragging, setIsDragging] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [showProofPopup, setShowProofPopup] = useState(false);
+  const [credentialAcceptCompleted, setCredentialAcceptCompleted] =
+    useState(false);
 
   // Google OAuth2 콜백 처리
   useEffect(() => {
@@ -63,6 +71,139 @@ export default function HomeScreen({
     }
   }, [searchParams, updateUser]);
 
+  // JWT 토큰 파싱 테스트 (처음 렌더링 시)
+  useEffect(() => {
+    const parseTestJWT = async () => {
+      console.log("🚀 JWT 토큰 파싱 테스트 시작");
+
+      // 테스트용 JWT 토큰
+      const testJWT =
+        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTU0NzA5NDE2NDIzOTQ5NjcyMTMiLCJpYXQiOjE3NTg0MDAwNTMsImV4cCI6MTc1ODQwMzY1Mywicm9sZSI6IlVTRVIiLCJ1c2VySWQiOjIsInhycGxBZGRyZXNzIjoick1DVXlWYXZ1VmpDalMyNEtqZ2EyR1huUnlHVlFGY1V1SCIsInhycGxTZWNyZXQiOiJVbnNpZ25lZEJ5dGVBcnJheXt1bnNpZ25lZEJ5dGVzPUxpc3Qoc2l6ZT0xNil9IiwiaXNLWUMiOnRydWV9.tb966E9nUVro5q2ezwjf6m7zmFsOeM4wWYkhTtXLCptK7UBFNAZwo-F0GhQe9ZeCYc7i1o4KJ4KsZTZjpt1rSg";
+
+      try {
+        // JWT 파싱
+        const payload = parseJWT(testJWT);
+        if (payload) {
+          console.log("📋 JWT 전체 Payload:", payload);
+          console.log("🎯 사용자 XRPL 주소 (Subject):", payload.xrplAddress);
+          console.log(
+            "🎯 발급자 XRPL 주소 (Issuer):",
+            payload.xrplIssuerAddress || "없음"
+          );
+          console.log("🔍 xrplAddress (사용자):", payload.xrplAddress);
+          console.log(
+            "🔍 xrplIssuerAddress (발급자):",
+            payload.xrplIssuerAddress || "없음"
+          );
+          console.log("🔍 xrplSecret (사용자 시크릿):", payload.xrplSecret);
+          console.log("🔍 isKYC:", payload.isKYC);
+          console.log("🔍 role:", payload.role);
+          console.log("🔍 userId:", payload.userId);
+
+          // 지갑 정보도 확인
+          const walletInfo = getXrplWalletInfo(testJWT);
+          console.log("🔍 XRPL 지갑 정보:", walletInfo);
+        } else {
+          console.log("❌ JWT 파싱 실패");
+        }
+      } catch (error) {
+        console.error("❌ JWT 파싱 중 오류:", error);
+      }
+    };
+
+    // 컴포넌트 마운트 시 즉시 실행
+    parseTestJWT();
+  }, []); // 빈 의존성 배열로 한 번만 실행
+
+  // 자동 CredentialAccept 실행
+  useEffect(() => {
+    console.log(
+      "🏠 HomeScreen useEffect 실행됨 - credentialAcceptCompleted:",
+      credentialAcceptCompleted
+    );
+
+    const executeCredentialAccept = async () => {
+      if (credentialAcceptCompleted) {
+        console.log("⏭️ 이미 CredentialAccept 완료되어 건너뜀");
+        return;
+      }
+
+      try {
+        console.log("🚀 홈 화면 진입 - 자동 CredentialAccept 시작");
+
+        // 액세스 토큰 가져오기
+        console.log("🔍 액세스 토큰 가져오는 중...");
+        const accessToken = await tokenManager.getAccessToken();
+        console.log("🔍 액세스 토큰:", accessToken ? "존재함" : "없음");
+
+        if (!accessToken) {
+          console.log("ℹ️ 액세스 토큰이 없어서 CredentialAccept 건너뜀");
+          return;
+        }
+
+        // JWT에서 XRPL 지갑 정보 확인
+        console.log("🔍 JWT 파싱 시작...");
+        const walletInfo = getXrplWalletInfo(accessToken);
+        console.log("🔍 XRPL 지갑 정보:", walletInfo);
+
+        if (!walletInfo) {
+          console.log("ℹ️ XRPL 지갑 정보가 없어서 CredentialAccept 건너뜀");
+          return;
+        }
+
+        // 지갑 주소 2개 상세 파싱
+        console.log("🎯 사용자 XRPL 주소 (Subject):", walletInfo.userAddress);
+        console.log(
+          "🎯 발급자 XRPL 주소 (Issuer):",
+          walletInfo.issuerAddress || "없음"
+        );
+
+        // JWT 전체 payload도 출력
+        const payload = parseJWT(accessToken);
+        if (payload) {
+          console.log("📋 JWT 전체 Payload:", payload);
+          console.log("🔍 xrplAddress (사용자):", payload.xrplAddress);
+          console.log(
+            "🔍 xrplIssuerAddress (발급자):",
+            payload.xrplIssuerAddress || "없음"
+          );
+          console.log("🔍 xrplSecret (사용자 시크릿):", payload.xrplSecret);
+          console.log("🔍 isKYC:", payload.isKYC);
+        }
+
+        // CredentialAccept API 호출
+        console.log("🌐 CredentialAccept API 호출 시작...");
+        const response = await fetch("/api/credential/accept", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: accessToken,
+          },
+        });
+
+        console.log("🌐 API 응답 상태:", response.status);
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log("✅ CredentialAccept 성공:", result);
+          setCredentialAcceptCompleted(true);
+          // sessionStorage에 완료 상태 저장
+          sessionStorage.setItem("credentialAcceptCompleted", "true");
+        } else {
+          const error = await response.json();
+          console.error("❌ CredentialAccept 실패:", error);
+        }
+      } catch (error) {
+        console.error("❌ CredentialAccept 실행 중 에러:", error);
+      }
+    };
+
+    // 홈 화면 진입 후 2초 뒤에 실행
+    console.log("⏰ 2초 후 CredentialAccept 실행 예약");
+    const timer = setTimeout(executeCredentialAccept, 2000);
+    return () => clearTimeout(timer);
+  }, [credentialAcceptCompleted]);
+
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
@@ -74,13 +215,83 @@ export default function HomeScreen({
     credentialType,
     issuerSeed,
     subjectSeed,
+    credentialAcceptCompleted: hookCredentialAcceptCompleted,
     markAsCompleted,
   } = useCredentialSetup({
     credentialType: "DRIVER_LICENCE",
     delay: 1000,
-    // 개발 환경에서 강제 표시하려면 forceShow: true 추가
-    forceShow: false,
+    forceShow: true, // 강제로 모달 표시
+    showAfterAccept: false, // 강제 표시 모드에서는 비활성화
   });
+
+  // 자동 CredentialAccept 실행
+  useEffect(() => {
+    console.log(
+      "🏠 HomeScreen useEffect 실행됨 - credentialAcceptCompleted:",
+      credentialAcceptCompleted
+    );
+
+    const executeCredentialAccept = async () => {
+      if (credentialAcceptCompleted) {
+        console.log("⏭️ 이미 CredentialAccept 완료되어 건너뜀");
+        return;
+      }
+
+      try {
+        console.log("🚀 홈 화면 진입 - 자동 CredentialAccept 시작");
+
+        // 액세스 토큰 가져오기
+        console.log("🔍 액세스 토큰 가져오는 중...");
+        const accessToken = await tokenManager.getAccessToken();
+        console.log("🔍 액세스 토큰:", accessToken ? "존재함" : "없음");
+
+        if (!accessToken) {
+          console.log("ℹ️ 액세스 토큰이 없어서 CredentialAccept 건너뜀");
+          return;
+        }
+
+        // JWT에서 XRPL 주소 확인
+        console.log("🔍 JWT 파싱 시작...");
+        const xrplAddress = getXrplAddressFromToken(accessToken);
+        console.log("🔍 XRPL 주소:", xrplAddress);
+
+        if (!xrplAddress) {
+          console.log("ℹ️ XRPL 주소가 없어서 CredentialAccept 건너뜀");
+          return;
+        }
+
+        console.log("🎯 사용자 XRPL 주소:", xrplAddress);
+
+        // CredentialAccept API 호출
+        console.log("🌐 CredentialAccept API 호출 시작...");
+        const response = await fetch("/api/credential/accept", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: accessToken,
+          },
+        });
+
+        console.log("🌐 API 응답 상태:", response.status);
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log("✅ CredentialAccept 성공:", result);
+          setCredentialAcceptCompleted(true);
+        } else {
+          const error = await response.json();
+          console.error("❌ CredentialAccept 실패:", error);
+        }
+      } catch (error) {
+        console.error("❌ CredentialAccept 실행 중 에러:", error);
+      }
+    };
+
+    // 홈 화면 진입 후 2초 뒤에 실행
+    console.log("⏰ 2초 후 CredentialAccept 실행 예약");
+    const timer = setTimeout(executeCredentialAccept, 2000);
+    return () => clearTimeout(timer);
+  }, [credentialAcceptCompleted]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStart({
@@ -675,12 +886,65 @@ export default function HomeScreen({
         onClose={() => {
           markAsCompleted();
         }}
-        onAccept={() => {
-          console.log(
-            "✅ XRPL Credential accepted for user:",
-            appState.user.email
-          );
-          markAsCompleted();
+        credentialAcceptCompleted={
+          credentialAcceptCompleted || hookCredentialAcceptCompleted
+        }
+        onAccept={async () => {
+          try {
+            console.log("🚀 KYC 인증 및 XRPL Credential Accept 시작...");
+
+            // 1. KYC API 호출
+            const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+            console.log("🔍 API Base URL:", apiBaseUrl);
+
+            // 액세스 토큰 가져오기
+            console.log("🔍 토큰 매니저에서 액세스 토큰 가져오는 중...");
+            const accessToken = await tokenManager.getAccessToken();
+            console.log("🔄 액세스 토큰:", accessToken);
+
+            if (!accessToken) {
+              console.error("❌ 액세스 토큰이 없습니다!");
+              throw new Error(
+                "액세스 토큰을 찾을 수 없습니다. 다시 로그인해주세요."
+              );
+            }
+
+            // URL 객체로 안전하게 결합해서 // 이중 슬래시 방지
+            const kycUrl = new URL("/api/v1/user/kyc", apiBaseUrl);
+            const kycResponse = await fetch(kycUrl.toString(), {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: accessToken, // Bearer 토큰 포함
+              },
+              body: JSON.stringify({
+                userId: "current_user_id", // 실제 사용자 ID
+                verificationStatus: "pending",
+                timestamp: new Date().toISOString(),
+              }),
+            });
+            console.log("🔄 KYC API 호출 완료:", kycResponse);
+
+            if (!kycResponse.ok) {
+              throw new Error(
+                `KYC API 호출 실패: ${kycResponse.status} ${kycResponse.statusText}`
+              );
+            }
+
+            const kycResult = await kycResponse.json();
+            console.log("✅ KYC API 호출 완료:", kycResult);
+
+            // 2. XRPL Credential Accept (기존 로직)
+            console.log("🚀 XRPL Credential Accept 시작...");
+            console.log(
+              "✅ XRPL Credential accepted for user:",
+              appState.user.email
+            );
+
+            markAsCompleted();
+          } catch (error) {
+            console.error("❌ 프로세스 실패:", error);
+          }
         }}
         issuerSeed={issuerSeed}
         subjectSeed={subjectSeed}

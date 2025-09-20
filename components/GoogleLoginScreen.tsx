@@ -28,21 +28,9 @@ export default function GoogleLoginScreen() {
         throw new Error("API Base URL이 설정되지 않았습니다");
       }
 
-      // API Base URL 정리 (끝에 슬래시 제거)
-
-      // 임시 디버깅: 하드코딩된 URL로 테스트
-      const debugApiBaseUrl = apiBaseUrl;
-      console.log("🔧 디버깅 - 하드코딩된 API URL:", debugApiBaseUrl);
-
       // 콜백 URL 설정 (토큰 핸들러 페이지)
       const callbackUrl = `${window.location.origin}/token-handler`;
 
-      // 디버깅을 위해 하드코딩된 URL 사용
-      const googleAuthUrl = `${debugApiBaseUrl}/oauth2/authorization/google?redirect_uri=${encodeURIComponent(
-        callbackUrl
-      )}`;
-
-      console.log("🔗 Google 인증 URL:", googleAuthUrl);
       console.log("📋 콜백 URL:", callbackUrl);
       console.log("🔍 환경 변수 확인:", {
         apiBaseUrl,
@@ -50,7 +38,13 @@ export default function GoogleLoginScreen() {
         origin: window.location.origin,
       });
 
-      window.location.href = googleAuthUrl;
+      // 중복 슬래시 방지: URL API로 안전하게 조합
+      const authPath = "/oauth2/authorization/google";
+      const redirect = new URL("/token-handler", window.location.origin);
+      const authUrl = new URL(authPath, apiBaseUrl);
+      authUrl.searchParams.set("redirect_uri", redirect.toString());
+
+      window.location.href = authUrl.toString();
     } catch (error) {
       console.error("💥 Google 로그인 에러:", error);
 
