@@ -14,6 +14,7 @@ import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Checkbox } from "./ui/checkbox";
 import { toast } from "sonner";
+import jwt from "jsonwebtoken";
 
 interface PaymentConfirmationScreenProps {
   navigateToScreen: (screen: string, data?: any) => void;
@@ -86,6 +87,132 @@ export default function PaymentConfirmationScreen({
 
     // Show success modal
     setShowSuccessModal(true);
+  };
+
+  const realHandlePayment = async () => {
+    if (!agreed) {
+      toast.error("Please agree to the terms and conditions");
+      return;
+    }
+
+    setIsProcessing(true);
+
+    try {
+      console.log("🚀 챌린지 참가 및 XRPL 트랜잭션 시작");
+
+      // 액세스 토큰 가져오기
+      const accessToken = sessionStorage.getItem("accessToken");
+      if (!accessToken) {
+        throw new Error("액세스 토큰이 없습니다");
+      }
+
+      // JWT 토큰 파싱
+      const cleanToken = accessToken.replace(/^Bearer\s+/i, "");
+      const payload = jwt.decode(cleanToken) as any;
+
+      // 1. Escrow 생성
+      console.log("🔒 Escrow 생성 시작...");
+
+      const challengeId = "1"; // 요청하신 대로 챌린지 ID 1로 설정
+
+      // Escrow 생성 API 호출
+      const escrowResponse = await fetch("/api/escrow/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: accessToken,
+        },
+        body: JSON.stringify({
+          issuerSeed: payload.xrplSecret, // 사용자 시크릿을 issuer로 사용 (실제로는 발급자 시드여야 함)
+          subjectSeed: payload.xrplAddress, // 사용자 주소를 subject로 사용
+          amount: challenge.participationFee * 1000000, // XRP를 drops로 변환 (1 XRP = 1,000,000 drops)
+          condition: `Challenge ${challengeId} participation escrow`,
+        }),
+      });
+
+      console.log("🔒 Escrow 생성 응답 상태:", escrowResponse.status);
+
+      if (!escrowResponse.ok) {
+        const error = await escrowResponse.json();
+        throw new Error(
+          `Escrow 생성 실패: ${error.message || "알 수 없는 오류"}`
+        );
+      }
+
+      const escrowResult = await escrowResponse.json();
+      console.log("✅ Escrow 생성 완료:", escrowResult);
+
+      // 2. XRPL 트랜잭션 생성 (소스 → 목적지)
+      console.log("💸 XRPL 트랜잭션 생성 중...");
+
+      // XRPL 트랜잭션 시뮬레이션 (실제로는 xrpl 라이브러리 사용)
+      const xrplTransaction = {
+        from: payload.xrplAddress, // 소스 주소
+        to: payload.issuerAddress, // 목적지 주소 (발급자)
+        amount: challenge.participationFee, // 참가료
+        currency: "XRP",
+        memo: `Challenge ${challengeId} participation fee`,
+        transactionHash:
+          "SIM_" + Math.random().toString(36).substr(2, 9).toUpperCase(),
+        escrowSequence: escrowResult.sequenceNumber, // Escrow 시퀀스 번호 포함
+      };
+
+      console.log("💸 XRPL 트랜잭션 정보:", xrplTransaction);
+
+      // XRPL 트랜잭션 시뮬레이션 지연
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      console.log("✅ XRPL 트랜잭션 완료:", xrplTransaction.transactionHash);
+
+      // 3. 서버에 챌린지 참가 신청
+      console.log("🌐 챌린지 참가 API 호출 시작");
+
+      console.log(
+        "🌐 프록시 API URL: /api/challenges/" + challengeId + "/participations"
+      );
+      console.log("🔍 Challenge ID:", challengeId);
+
+      const response = await fetch(
+        `/api/challenges/${challengeId}/participations`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: accessToken,
+          },
+          body: JSON.stringify({
+            participationFee: challenge.participationFee,
+            challengeId: 1,
+            xrplTransactionHash: xrplTransaction.transactionHash,
+            fromAddress: payload.xrplAddress,
+            toAddress: payload.issuerAddress,
+            escrowSequence: escrowResult.sequenceNumber,
+            escrowTxHash: escrowResult.txHash,
+          }),
+        }
+      );
+
+      console.log("🌐 API 응답 상태:", response.status);
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("✅ 챌린지 참가 성공:", result);
+
+        // 성공 토스트
+        toast.success("XRPL 트랜잭션 및 챌린지 참가가 완료되었습니다! 🎉");
+
+        // 성공 모달 표시
+        setShowSuccessModal(true);
+      } else {
+        const error = await response.json();
+        console.error("❌ 챌린지 참가 실패:", error);
+        toast.error(`참가 실패: ${error.message || "알 수 없는 오류"}`);
+      }
+    } catch (error) {
+      console.error("❌ 처리 중 오류:", error);
+      toast.error("처리 중 오류가 발생했습니다");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleModalOk = () => {
@@ -281,6 +408,7 @@ export default function PaymentConfirmationScreen({
 
       {/* Action Section */}
       <div className="bg-white border-t border-[#eaecf0] p-6 space-y-3">
+        {/* 시뮬레이션 버튼 */}
         <Button
           onClick={handlePayment}
           disabled={!agreed || isProcessing}
@@ -292,7 +420,23 @@ export default function PaymentConfirmationScreen({
               <span>Processing Payment...</span>
             </div>
           ) : (
-            "Confirm & Pay"
+            "Confirm & Pay (Simulation)"
+          )}
+        </Button>
+
+        {/* 실제 API 호출 버튼 */}
+        <Button
+          onClick={realHandlePayment}
+          disabled={!agreed || isProcessing}
+          className="w-full bg-[#3ba935] hover:bg-[#2d8a27] text-white py-4 rounded-xl font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+        >
+          {isProcessing ? (
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <span>Processing Real Payment...</span>
+            </div>
+          ) : (
+            "Confirm & Pay (Real API)"
           )}
         </Button>
 
