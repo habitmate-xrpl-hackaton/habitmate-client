@@ -7,9 +7,9 @@ import { handleTokensFromUrl } from "@/lib/auth/globalTokenHandler";
 import { parseTokensFromCurrentUrl } from "@/lib/auth/tokenParser";
 
 interface CatchAllPageProps {
-  params: {
+  params: Promise<{
     catchall: string[];
-  };
+  }>;
 }
 
 function CatchAllContent({ params }: CatchAllPageProps) {
@@ -19,14 +19,30 @@ function CatchAllContent({ params }: CatchAllPageProps) {
     "loading"
   );
   const [message, setMessage] = useState("토큰을 처리하고 있습니다...");
+  const [resolvedParams, setResolvedParams] = useState<{
+    catchall: string[];
+  } | null>(null);
 
   useEffect(() => {
+    const resolveParams = async () => {
+      const resolved = await params;
+      setResolvedParams(resolved);
+    };
+    resolveParams();
+  }, [params]);
+
+  useEffect(() => {
+    if (!resolvedParams) return;
+
     const processTokens = async () => {
       try {
         // 디버깅: 현재 URL과 쿼리 파라미터 콘솔 출력
         if (typeof window !== "undefined") {
           console.log("🔍 CatchAll 페이지 - 현재 URL:", window.location.href);
-          console.log("🔍 CatchAll 페이지 - 파라미터:", params.catchall);
+          console.log(
+            "🔍 CatchAll 페이지 - 파라미터:",
+            resolvedParams.catchall
+          );
 
           // %20? 패턴 감지
           const url = window.location.href;
@@ -98,7 +114,7 @@ function CatchAllContent({ params }: CatchAllPageProps) {
     };
 
     processTokens();
-  }, [router, updateUser, params.catchall]);
+  }, [router, updateUser, resolvedParams]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -137,7 +153,7 @@ function CatchAllContent({ params }: CatchAllPageProps) {
           <p>이 페이지는 모든 URL 패턴에서</p>
           <p>토큰을 자동으로 파싱하고 저장합니다.</p>
           <p className="mt-2 text-xs">
-            현재 경로: /{params.catchall?.join("/") || "root"}
+            현재 경로: /{resolvedParams?.catchall?.join("/") || "root"}
           </p>
         </div>
       </div>

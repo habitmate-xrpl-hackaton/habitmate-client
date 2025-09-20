@@ -7,6 +7,7 @@ export interface TokenHandlerOptions {
   redirectPath?: string;
   onSuccess?: (tokenInfo: any) => void;
   onError?: (error: string) => void;
+  onNoTokens?: () => void;
 }
 
 /**
@@ -20,6 +21,7 @@ export async function handleTokensFromUrl(options: TokenHandlerOptions = {}) {
     redirectPath = "/home",
     onSuccess,
     onError,
+    onNoTokens,
   } = options;
 
   try {
@@ -30,6 +32,7 @@ export async function handleTokensFromUrl(options: TokenHandlerOptions = {}) {
 
     if (!tokenInfo) {
       console.log("ℹ️ URL에 토큰이 없습니다");
+      onNoTokens?.();
       return { success: false, reason: "no_tokens" };
     }
 
