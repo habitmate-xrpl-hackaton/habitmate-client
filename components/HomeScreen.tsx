@@ -1,32 +1,19 @@
 import React, { useState, useRef } from "react";
 import Image from "next/image";
-import {
-  Bell,
-  Camera,
-  Calendar,
-  TrendingUp,
-  Users,
-  Target,
-  Plus,
-  Clock,
-  CheckSquare,
-} from "lucide-react";
+import { Camera, Users, Clock } from "lucide-react";
 import { Button } from "./ui/button";
-import { Card } from "./ui/card";
 import { Progress } from "./ui/progress";
 import RightIcon from "../imports/RightIcon";
 import LeftIcon from "../imports/LeftIcon-13-1947";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 interface HomeScreenProps {
   navigateToScreen?: (screen: string, data?: any) => void;
   appState?: any;
 }
 
-export default function HomeScreen({
-  navigateToScreen,
-  appState,
-}: HomeScreenProps) {
+export default function HomeScreen({ appState }: HomeScreenProps) {
   const [activeTab, setActiveTab] = useState("today");
   const [touchStart, setTouchStart] = useState({ x: 0, y: 0 });
   const [touchEnd, setTouchEnd] = useState({ x: 0, y: 0 });
@@ -37,6 +24,7 @@ export default function HomeScreen({
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { data: session } = useSession();
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStart({
@@ -235,7 +223,7 @@ export default function HomeScreen({
   };
 
   const handleFireClick = (day: string, event: React.MouseEvent) => {
-    const dayProofs = proofsPerDay[day] || [];
+    const dayProofs = proofsPerDay[day as keyof typeof proofsPerDay] || [];
 
     if (dayProofs.length === 0) return;
 
@@ -310,19 +298,29 @@ export default function HomeScreen({
         <div className="flex justify-between items-center">
           <div className="flex-1">
             <h2 className="text-lg text-[#040415] mb-1">
-              Hi, {appState.user.name.split(" ")[0]} 👋🏻
+              Hi, {session?.user?.name?.split(" ")[0] || "User"} 👋🏻
             </h2>
             <p className="text-sm text-[#9b9ba1]">
-              Let's make habits together!
+              Let&apos;s make habits together!
             </p>
           </div>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => router.push("/profile")}
-            className="bg-[#ddf2fc] w-12 h-12 rounded-3xl flex items-center justify-center p-0 hover:bg-[#c7eaf7] transition-colors"
+            className="bg-[#ddf2fc] w-12 h-12 rounded-3xl flex items-center justify-center p-0 hover:bg-[#c7eaf7] transition-colors cursor-pointer"
           >
-            <span className="text-2xl">😇</span>
+            {session?.user?.image ? (
+              <Image
+                src={session?.user?.image}
+                width={48}
+                height={48}
+                alt="Profile"
+                className="w-12 h-12 rounded-3xl object-cover"
+              />
+            ) : (
+              <span className="text-2xl">😇</span>
+            )}
           </Button>
         </div>
 
@@ -465,7 +463,7 @@ export default function HomeScreen({
           </div>
 
           <div className="space-y-3">
-            {currentChallenges.map((challenge) => (
+            {currentChallenges.map((challenge: any) => (
               <div
                 key={challenge.id}
                 className="bg-white rounded-2xl p-4 crypto-shadow cursor-pointer hover:scale-105 transition-transform"
@@ -557,7 +555,9 @@ export default function HomeScreen({
                 Proofs for Day {selectedDay}
               </h3>
 
-              {(proofsPerDay[selectedDay] || []).map((proof: any) => (
+              {(
+                proofsPerDay[selectedDay as keyof typeof proofsPerDay] || []
+              ).map((proof: any) => (
                 <div
                   key={proof.id}
                   className="flex items-center space-x-3 cursor-pointer hover:bg-[#f6f9ff] rounded-lg p-2 -m-2 hover:scale-105 transition-transform"
@@ -566,7 +566,9 @@ export default function HomeScreen({
                   {/* Thumbnail */}
                   <div className="w-12 h-12 rounded-lg overflow-hidden bg-[#d7d9ff] flex-shrink-0">
                     {proof.image ? (
-                      <img
+                      <Image
+                        width={48}
+                        height={48}
                         src={proof.image}
                         alt={proof.challengeName}
                         className="w-full h-full object-cover"

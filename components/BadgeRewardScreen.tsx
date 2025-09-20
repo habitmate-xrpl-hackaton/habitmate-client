@@ -2,7 +2,6 @@ import React from "react";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import {
-  imgLeftIcon,
   imgRectangle160,
   imgRectangle161,
   imgRectangle162,
@@ -54,9 +53,12 @@ export default function BadgeRewardScreen({
                 style={{ maskImage: `url('${imgRectangle160}')` }}
               >
                 <div className="absolute bottom-[-6.25%] left-0 right-0 top-0">
-                  <img
+                  <Image
                     className="block max-w-none size-full"
                     src={imgRectangle161}
+                    alt="Rectangle"
+                    width={128}
+                    height={160}
                   />
                 </div>
               </div>
@@ -73,9 +75,12 @@ export default function BadgeRewardScreen({
                     className="h-[160px] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[12.157px_5.075px] mask-size-[128px_160px] relative w-[56px]"
                     style={{ maskImage: `url('${imgRectangle160}')` }}
                   >
-                    <img
+                    <Image
                       className="block max-w-none size-full"
                       src={imgRectangle162}
+                      alt="Rectangle"
+                      width={128}
+                      height={160}
                     />
                   </div>
                 </div>
@@ -86,18 +91,24 @@ export default function BadgeRewardScreen({
                 className="absolute mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[-15px_-16px] mask-size-[128px_160px] size-2 -top-12 -left-10"
                 style={{ maskImage: `url('${imgRectangle160}')` }}
               >
-                <img
+                <Image
                   className="block max-w-none size-full"
                   src={imgEllipse42}
+                  alt="Ellipse"
+                  width={8}
+                  height={8}
                 />
               </div>
               <div
                 className="absolute mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[-83px_-96px] mask-size-[128px_160px] size-2 top-10 right-8"
                 style={{ maskImage: `url('${imgRectangle160}')` }}
               >
-                <img
+                <Image
                   className="block max-w-none size-full"
                   src={imgEllipse43}
+                  alt="Ellipse"
+                  width={8}
+                  height={8}
                 />
               </div>
             </div>
@@ -111,7 +122,7 @@ export default function BadgeRewardScreen({
             <div className="space-y-1">
               <h1 className="text-3xl font-bold tracking-tight">Congrats!</h1>
               <h2 className="text-lg font-semibold">
-                You just completed today's challenge!
+                You just completed today&apos;s challenge!
               </h2>
             </div>
 

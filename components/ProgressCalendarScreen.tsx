@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowLeft, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Progress } from "./ui/progress";
@@ -10,6 +10,7 @@ import {
   SheetTitle,
   SheetDescription,
 } from "./ui/sheet";
+import { useRouter } from "next/navigation";
 
 interface ProgressCalendarScreenProps {
   navigateToScreen: (screen: string, data?: any) => void;
@@ -18,13 +19,13 @@ interface ProgressCalendarScreenProps {
 
 export default function ProgressCalendarScreen({
   navigateToScreen,
-  appState,
 }: ProgressCalendarScreenProps) {
   const [activeTab, setActiveTab] = useState("solo");
   const [selectedDate, setSelectedDate] = useState<number | null>(null);
   const [showDateDetail, setShowDateDetail] = useState(false);
   const [currentMonth] = useState(new Date(2024, 8, 1)); // September 2024
 
+  const router = useRouter();
   // Mock data for calendar
   const soloData = {
     proofs: [1, 2, 3, 5, 6, 8, 9, 10, 12, 13, 15, 16, 17, 19, 20], // Days with proofs uploaded
@@ -44,11 +45,11 @@ export default function ProgressCalendarScreen({
     currentMonth.getMonth(),
     1
   );
-  const lastDayOfMonth = new Date(
-    currentMonth.getFullYear(),
-    currentMonth.getMonth() + 1,
-    0
-  );
+  // const lastDayOfMonth = new Date(
+  //   currentMonth.getFullYear(),
+  //   currentMonth.getMonth() + 1,
+  //   0
+  // );
   const startDate = new Date(firstDayOfMonth);
   startDate.setDate(startDate.getDate() - firstDayOfMonth.getDay());
 
@@ -126,15 +127,15 @@ export default function ProgressCalendarScreen({
   const missedProofs = activeTab === "solo" ? 18 : 15;
 
   return (
-    <div className="min-h-screen bg-[#f6f9ff] flex flex-col">
+    <div className="min-h-screen bg-[#f6f9ff] flex flex-col pb-14">
       {/* Header */}
       <div className="bg-white px-6 py-4 border-b border-[#eaecf0]">
         <div className="flex justify-between items-center">
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigateToScreen("home")}
-            className="w-12 h-12 p-0 bg-white border border-[#eaecf0] rounded-2xl hover:bg-gray-50"
+            onClick={() => router.push("/home")}
+            className="w-12 h-12 p-0 bg-white border border-[#eaecf0] rounded-2xl hover:bg-gray-50 cursor-pointer"
           >
             <ArrowLeft className="h-5 w-5 text-[#040415]" />
           </Button>
@@ -156,7 +157,7 @@ export default function ProgressCalendarScreen({
           >
             <button
               onClick={() => setActiveTab("solo")}
-              className={`text-sm font-medium w-full text-center ${
+              className={`text-sm font-medium w-full text-center cursor-pointer ${
                 activeTab === "solo" ? "text-[#040415]" : "text-[#686873]"
               }`}
             >
@@ -170,7 +171,7 @@ export default function ProgressCalendarScreen({
           >
             <button
               onClick={() => setActiveTab("clubs")}
-              className={`text-sm font-medium w-full text-center ${
+              className={`text-sm font-medium w-full text-center cursor-pointer ${
                 activeTab === "clubs" ? "text-[#040415]" : "text-[#686873]"
               }`}
             >
@@ -213,7 +214,7 @@ export default function ProgressCalendarScreen({
                   key={index}
                   onClick={() => handleDateClick(date)}
                   className={`
-                    relative w-10 h-10 rounded-lg flex items-center justify-center text-sm
+                    relative w-10 h-10 rounded-lg flex items-center justify-center text-sm cursor-pointer
                     ${isCurrentMonthDate ? "text-[#040415]" : "text-[#cdcdd0]"}
                     ${isToday ? "ring-2 ring-[#3843ff] ring-offset-2" : ""}
                     ${isCurrentMonthDate ? "hover:bg-[#f6f9ff]" : ""}
@@ -400,13 +401,13 @@ export default function ProgressCalendarScreen({
                 <Button
                   onClick={() => {
                     setShowDateDetail(false);
-                    navigateToScreen("proof-upload");
+                    router.push("/home");
                   }}
-                  className="w-full crypto-gradient text-white hover:opacity-90 rounded-2xl py-3"
+                  className="w-full crypto-gradient text-white hover:opacity-90 rounded-2xl py-3 cursor-pointer"
                 >
                   Upload Proof
                 </Button>
-                <Button
+                {/* <Button
                   onClick={() => {
                     setShowDateDetail(false);
                     navigateToScreen("home");
@@ -415,7 +416,7 @@ export default function ProgressCalendarScreen({
                   className="w-full border-[#eaecf0] text-[#040415] hover:bg-[#f6f9ff] rounded-2xl py-3"
                 >
                   View Challenges
-                </Button>
+                </Button> */}
               </div>
             </div>
           )}

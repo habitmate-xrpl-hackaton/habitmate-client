@@ -1,18 +1,9 @@
-import Image from "next/image";
 import React from "react";
-import {
-  ArrowLeft,
-  Users,
-  Calendar,
-  DollarSign,
-  Target,
-  Clock,
-  Star,
-} from "lucide-react";
+import { ArrowLeft, Users, Calendar, Target, Star } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
-import { Badge } from "./ui/badge";
 import { Progress } from "./ui/progress";
+import Image from "next/image";
 
 interface ChallengeDetailScreenProps {
   navigateToScreen: (screen: string, data?: any) => void;
@@ -115,10 +106,12 @@ export default function ChallengeDetailScreen({
                 Sponsored by
               </span>
               <div className="w-10 h-10 bg-white rounded-lg border border-[#eaecf0] flex items-center justify-center overflow-hidden">
-                <img
+                <Image
                   src={challenge.sponsorLogo}
                   alt={challenge.sponsorName}
                   className="w-6 h-6 object-contain"
+                  width={24}
+                  height={24}
                 />
               </div>
             </div>
@@ -333,7 +326,7 @@ export default function ChallengeDetailScreen({
           </h3>
 
           <div className="space-y-4">
-            {challenge.rules.map((rule, index) => (
+            {challenge.rules.map((rule: any, index: number) => (
               <div key={index} className="flex items-start gap-4">
                 <div className="w-8 h-8 bg-[#3843ff] text-white rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0 mt-0.5">
                   {index + 1}
@@ -357,7 +350,7 @@ export default function ChallengeDetailScreen({
           </h3>
 
           <div className="space-y-4">
-            {challenge.rewards.map((reward, index) => (
+            {challenge.rewards.map((reward: any, index: number) => (
               <div key={index} className="flex items-start gap-4">
                 <div className="w-3 h-3 bg-[#3ba935] rounded-full flex-shrink-0 mt-2"></div>
                 <p className="text-sm text-[#040415] leading-relaxed flex-1">
@@ -378,7 +371,7 @@ export default function ChallengeDetailScreen({
           onClick={() =>
             navigateToScreen("payment-confirmation", { challenge })
           }
-          className="w-full bg-[#3843ff] hover:bg-[#6b73ff] text-white py-4 rounded-xl font-semibold text-base transition-all"
+          className="w-full bg-[#3843ff] hover:bg-[#6b73ff] text-white py-4 rounded-xl font-semibold text-base transition-all cursor-pointer"
         >
           Join Challenge
         </Button>

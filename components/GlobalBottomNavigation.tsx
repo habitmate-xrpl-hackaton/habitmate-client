@@ -21,32 +21,27 @@ export default function GlobalBottomNavigation({
     {
       id: "home",
       icon: Home,
-      label: "Home",
       path: "/home",
     },
     {
       id: "feed",
       icon: List,
-      label: "Feed",
       path: "/feeds",
     },
     {
       id: "explore",
       icon: Search,
-      label: "Explore",
       path: "/explore",
     },
     {
       id: "leaderboard",
       icon: Award,
-      label: "Leaderboard",
       path: "/leaderboard",
       hasNotification: true,
     },
     {
       id: "profile",
       icon: User,
-      label: "Profile",
       path: "/profile",
     },
   ];
@@ -71,7 +66,7 @@ export default function GlobalBottomNavigation({
   };
 
   return (
-    <div className="px-4 pb-8 pt-4">
+    <div className="px-4 pt-4">
       <div className="bg-white rounded-[64px] px-6 py-5 shadow-[58px_26px_68px_0px_rgba(35,44,93,0.06)] border border-[#cdcdd0]/50">
         <div className="flex justify-around items-center">
           {tabs.map((tab) => {
@@ -91,9 +86,6 @@ export default function GlobalBottomNavigation({
                       active ? "text-[#3843ff]" : "text-[#bdbdbd]"
                     }`}
                   />
-                  {tab.hasNotification && (
-                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-[#e3524f] rounded-full"></div>
-                  )}
                 </div>
               </Button>
             );

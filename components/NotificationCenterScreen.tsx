@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
-import { Badge } from "./ui/badge";
 
 interface NotificationCenterScreenProps {
   navigateToScreen: (screen: string, data?: any) => void;
@@ -19,7 +18,6 @@ interface NotificationCenterScreenProps {
 
 export default function NotificationCenterScreen({
   navigateToScreen,
-  appState,
 }: NotificationCenterScreenProps) {
   const notifications = [
     {
@@ -134,7 +132,7 @@ export default function NotificationCenterScreen({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigateToScreen("home")}
+            onClick={() => window.history.back()}
             className="p-2"
           >
             <ArrowLeft className="h-6 w-6" />
@@ -158,7 +156,7 @@ export default function NotificationCenterScreen({
             <Bell className="h-16 w-16 text-gray-300 mb-4" />
             <h3 className="text-lg text-gray-900 mb-2">No notifications</h3>
             <p className="text-gray-600">
-              You're all caught up! New notifications will appear here.
+              You&apos;re all caught up! New notifications will appear here.
             </p>
           </div>
         ) : (

@@ -5,6 +5,8 @@ import { XRPLProvider } from "@/xrpl-react-integration";
 import BufferProvider from "@/components/BufferProvider";
 import { AppProvider } from "@/lib/context/AppContext";
 import GlobalBottomNavigationWrapper from "@/components/GlobalBottomNavigationWrapper";
+import ClientSWRConfig from "@/lib/swr/ClientSWRConfig";
+import Providers from "@/components/Providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,16 +33,20 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-[#f6f9ff] font-['Pretendard']`}
       >
-        <BufferProvider>
-          <XRPLProvider>
-            <AppProvider>
-              <div className="w-full max-w-md mx-auto min-h-screen relative pb-20">
-                {children}
-                <GlobalBottomNavigationWrapper />
-              </div>
-            </AppProvider>
-          </XRPLProvider>
-        </BufferProvider>
+        <Providers>
+          <ClientSWRConfig>
+            <BufferProvider>
+              <XRPLProvider>
+                <AppProvider>
+                  <div className="w-full max-w-md mx-auto min-h-screen relative">
+                    {children}
+                    <GlobalBottomNavigationWrapper />
+                  </div>
+                </AppProvider>
+              </XRPLProvider>
+            </BufferProvider>
+          </ClientSWRConfig>
+        </Providers>
       </body>
     </html>
   );

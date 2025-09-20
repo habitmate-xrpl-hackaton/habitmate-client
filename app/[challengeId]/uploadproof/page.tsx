@@ -27,7 +27,7 @@ function UploadProofPageContent() {
   };
 
   // challengeId를 props로 전달
-  return <ProofUploadScreen {...commonProps} challengeId={challengeId} />;
+  return <ProofUploadScreen {...commonProps} />;
 }
 
 export default function UploadProofPage() {

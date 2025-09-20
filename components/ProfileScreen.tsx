@@ -25,9 +25,10 @@ import { Progress } from "./ui/progress";
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer } from "recharts";
 import { WalletConnectButton } from "./WalletConnectButton";
 import SettingsScreen from "./SettingsScreen";
+import { useSession } from "next-auth/react";
 
 interface ProfileScreenProps {
-  navigateToScreen: (screen: string) => void;
+  navigateToScreen: (screen: string, data?: any) => void;
   appState: any;
   connectWallet: () => void;
   disconnectWallet: () => void;
@@ -46,6 +47,7 @@ export default function ProfileScreen({
   const [activeTab, setActiveTab] = useState("weekly");
   const [contentTab, setContentTab] = useState("activity"); // New tab state for Activity/Achievements
   const [showSettings, setShowSettings] = useState(false);
+  const { data: session } = useSession();
 
   // 모달이 열릴 때 body에 클래스 추가/제거
   useEffect(() => {
@@ -244,10 +246,7 @@ export default function ProfileScreen({
             <Avatar className="h-16 w-16">
               <AvatarImage src={viewingUser.avatar} alt={viewingUser.name} />
               <AvatarFallback>
-                {viewingUser.name
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")}
+                {session?.user?.name?.split(" ")[0] || "User"}
               </AvatarFallback>
             </Avatar>
             <div>
@@ -276,7 +275,7 @@ export default function ProfileScreen({
                 variant="ghost"
                 size="sm"
                 onClick={() => navigateToScreen("edit-profile")}
-                className="w-10 h-10 p-0 bg-[#f6f9ff] border border-[#eaecf0] rounded-xl hover:bg-gray-50"
+                className="w-10 h-10 p-0 bg-[#f6f9ff] border border-[#eaecf0] rounded-xl hover:bg-gray-50 cursor-pointer"
               >
                 <Edit className="h-4 w-4 text-[#040415]" />
               </Button>
@@ -284,7 +283,7 @@ export default function ProfileScreen({
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowSettings(true)}
-                className="w-10 h-10 p-0 bg-[#f6f9ff] border border-[#eaecf0] rounded-xl hover:bg-gray-50"
+                className="w-10 h-10 p-0 bg-[#f6f9ff] border border-[#eaecf0] rounded-xl hover:bg-gray-50 cursor-pointer"
               >
                 <Settings className="h-4 w-4 text-[#040415]" />
               </Button>
@@ -319,7 +318,7 @@ export default function ProfileScreen({
 
         {/* Wallet Connect Button */}
         {isOwnProfile && (
-          <div className="mt-4">
+          <div className="mt-4 cursor-pointer">
             <WalletConnectButton
               isConnected={appState.wallet.isConnected}
               address={appState.wallet.address}

@@ -29,8 +29,12 @@ export default function GlobalBottomNavigationWrapper() {
 
   // onboarding, google-login 페이지 또는 모달이 열려있을 때 네비게이션 숨기기
   const hideNavigation =
-    pathname === "/onboarding" || pathname === "/google-login" || isModalOpen;
-
+    pathname === "/onboarding" ||
+    pathname === "/google-login" ||
+    isModalOpen ||
+    pathname === "/uploadproof" ||
+    pathname === "/createchallenge" ||
+    pathname === "/challenge-detail";
   if (hideNavigation) {
     return null;
   }

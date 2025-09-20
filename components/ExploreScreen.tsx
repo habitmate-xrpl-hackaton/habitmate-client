@@ -78,7 +78,7 @@ export default function ExploreScreen({
 
   // Convert user-created group challenges to display format
   const userGroupChallenges = (appState.groupChallenges || []).map(
-    (challenge) => ({
+    (challenge: any) => ({
       emoji: "✨", // Default emoji for user-created challenges
       name: challenge.title,
       description: challenge.description,

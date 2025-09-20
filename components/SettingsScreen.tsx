@@ -5,8 +5,6 @@ import {
   Shield,
   HelpCircle,
   LogOut,
-  Moon,
-  Sun,
   Smartphone,
   Wallet,
 } from "lucide-react";
@@ -16,6 +14,8 @@ import { Switch } from "./ui/switch";
 import { Separator } from "./ui/separator";
 import { toast } from "sonner";
 import { WalletConnectButton } from "./WalletConnectButton";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface SettingsScreenProps {
   navigateToScreen: (screen: string) => void;
@@ -54,6 +54,8 @@ export default function SettingsScreen({
     },
   });
 
+  const router = useRouter();
+
   const handleSettingChange = (
     category: string,
     setting: string,
@@ -62,16 +64,30 @@ export default function SettingsScreen({
     setSettings((prev) => ({
       ...prev,
       [category]: {
-        ...prev[category],
+        ...(prev as any)[category],
         [setting]: value,
       },
     }));
   };
 
-  const handleLogout = () => {
-    updateUser({ isLoggedIn: false });
-    toast.success("Logged out successfully");
-    navigateToScreen("onboarding");
+  const handleLogout = async () => {
+    try {
+      // NextAuth 세션 쿠키 삭제
+      await signOut({
+        redirect: false,
+        callbackUrl: "/onboarding",
+      });
+
+      // AppContext 사용자 상태 초기화
+      updateUser?.({ isLoggedIn: false });
+      toast.success("Logged out successfully");
+      router.push("/onboarding");
+    } catch (error) {
+      console.error("로그아웃 에러:", error);
+      // 에러가 발생해도 로컬 상태는 초기화
+      updateUser?.({ isLoggedIn: false });
+      navigateToScreen("onboarding");
+    }
   };
 
   return (

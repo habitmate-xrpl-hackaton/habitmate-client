@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   ArrowLeft,
   Plus,
@@ -14,6 +14,9 @@ import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Badge } from "./ui/badge";
+import useSWR from "swr";
+import ky from "ky";
+import { log } from "console";
 
 interface ChallengesScreenProps {
   navigateToScreen: (screen: string, data?: any) => void;
@@ -27,6 +30,31 @@ export default function ChallengesScreen({
   // Check if we should open Brand Challenges tab based on navigation data
   const initialTab = appState?.selectedTab || "group";
   const [activeTab, setActiveTab] = useState(initialTab);
+  // const { data } = useSWR("/api/getChallenges");
+  // console.log("data : ", data);
+  // const { data: logs } = useSWR(`/api/getChallenges`);
+  // console.log("logs : ", logs);
+
+  // useEffect(() => {
+  //   async function fetchChallenges() {
+  //     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+  //     const response = await ky.get(`${API_BASE_URL}/public-challenges`);
+  //     console.log("response : ", response);
+  //   }
+  //   fetchChallenges();
+  // }, []);
+
+  // async function fetchChallenges() {
+  //   const response = await ky.get(
+  //     `https://xrpl-4mf9.onrender.com/api/v1/getChallenges`
+  //   );
+  //   const data = await response.json();
+  //   console.log("data : ", data);
+  // }
+
+  // useEffect(() => {
+  //   fetchChallenges();
+  // }, []);
 
   const groupChallenges = [
     {
