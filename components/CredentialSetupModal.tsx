@@ -126,11 +126,23 @@ export function useCredentialSetupModal() {
 
       // 1. KYC API 호출
       const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+      console.log("🔍 API Base URL:", apiBaseUrl);
+
+      // sessionStorage에서 직접 확인
+      const directToken = sessionStorage.getItem("accessToken");
+      console.log("🔍 sessionStorage에서 직접 가져온 토큰:", directToken);
 
       // 액세스 토큰 가져오기
+      console.log("🔍 토큰 매니저에서 액세스 토큰 가져오는 중...");
       const accessToken = await tokenManager.getAccessToken();
       console.log("🔄 액세스 토큰:", accessToken);
+
       if (!accessToken) {
+        console.error("❌ 액세스 토큰이 없습니다!");
+        console.log(
+          "🔍 sessionStorage 직접 확인:",
+          sessionStorage.getItem("accessToken")
+        );
         throw new Error("액세스 토큰을 찾을 수 없습니다. 다시 로그인해주세요.");
       }
 

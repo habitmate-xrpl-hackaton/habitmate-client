@@ -12,6 +12,7 @@ import NotificationCenterScreen from "./NotificationCenterScreen";
 import CredentialSetupModalWithXRPL from "./CredentialSetupModalWithXRPL";
 import { useCredentialSetup } from "@/lib/credentials/useCredentialSetup";
 import { useApp } from "@/lib/context/AppContext";
+import { tokenManager } from "@/lib/auth/tokenManager";
 
 interface HomeScreenProps {
   navigateToScreen?: (screen: string, data?: any) => void;
@@ -79,7 +80,7 @@ export default function HomeScreen({
     credentialType: "DRIVER_LICENCE",
     delay: 1000,
     // 개발 환경에서 강제 표시하려면 forceShow: true 추가
-    forceShow: false,
+    forceShow: true, // 테스트를 위해 true로 변경
   });
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -675,12 +676,60 @@ export default function HomeScreen({
         onClose={() => {
           markAsCompleted();
         }}
-        onAccept={() => {
-          console.log(
-            "✅ XRPL Credential accepted for user:",
-            appState.user.email
-          );
-          markAsCompleted();
+        onAccept={async () => {
+          try {
+            console.log("🚀 KYC 인증 및 XRPL Credential Accept 시작...");
+
+            // 1. KYC API 호출
+            const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+            console.log("🔍 API Base URL:", apiBaseUrl);
+
+            // 액세스 토큰 가져오기
+            console.log("🔍 토큰 매니저에서 액세스 토큰 가져오는 중...");
+            const accessToken = await tokenManager.getAccessToken();
+            console.log("🔄 액세스 토큰:", accessToken);
+
+            if (!accessToken) {
+              console.error("❌ 액세스 토큰이 없습니다!");
+              throw new Error(
+                "액세스 토큰을 찾을 수 없습니다. 다시 로그인해주세요."
+              );
+            }
+
+            const kycResponse = await fetch(`${apiBaseUrl}/api/v1/user/kyc`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: accessToken, // Bearer 토큰 포함
+              },
+              body: JSON.stringify({
+                userId: "current_user_id", // 실제 사용자 ID
+                verificationStatus: "pending",
+                timestamp: new Date().toISOString(),
+              }),
+            });
+            console.log("🔄 KYC API 호출 완료:", kycResponse);
+
+            if (!kycResponse.ok) {
+              throw new Error(
+                `KYC API 호출 실패: ${kycResponse.status} ${kycResponse.statusText}`
+              );
+            }
+
+            const kycResult = await kycResponse.json();
+            console.log("✅ KYC API 호출 완료:", kycResult);
+
+            // 2. XRPL Credential Accept (기존 로직)
+            console.log("🚀 XRPL Credential Accept 시작...");
+            console.log(
+              "✅ XRPL Credential accepted for user:",
+              appState.user.email
+            );
+
+            markAsCompleted();
+          } catch (error) {
+            console.error("❌ 프로세스 실패:", error);
+          }
         }}
         issuerSeed={issuerSeed}
         subjectSeed={subjectSeed}
