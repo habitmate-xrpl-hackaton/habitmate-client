@@ -13,7 +13,10 @@ import CredentialSetupModalWithXRPL from "./CredentialSetupModalWithXRPL";
 import { useCredentialSetup } from "@/lib/credentials/useCredentialSetup";
 import { useApp } from "@/lib/context/AppContext";
 import { tokenManager } from "@/lib/auth/tokenManager";
-import { getXrplAddressFromToken } from "@/lib/auth/jwtParser";
+import {
+  getXrplAddressFromToken,
+  getXrplWalletInfo,
+} from "@/lib/auth/jwtParser";
 
 interface HomeScreenProps {
   navigateToScreen?: (screen: string, data?: any) => void;
@@ -35,6 +38,8 @@ export default function HomeScreen({
   const [isDragging, setIsDragging] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [showProofPopup, setShowProofPopup] = useState(false);
+  const [credentialAcceptCompleted, setCredentialAcceptCompleted] =
+    useState(false);
 
   // Google OAuth2 콜백 처리
   useEffect(() => {
@@ -65,11 +70,81 @@ export default function HomeScreen({
     }
   }, [searchParams, updateUser]);
 
+  // 자동 CredentialAccept 실행
+  useEffect(() => {
+    console.log(
+      "🏠 HomeScreen useEffect 실행됨 - credentialAcceptCompleted:",
+      credentialAcceptCompleted
+    );
+
+    const executeCredentialAccept = async () => {
+      if (credentialAcceptCompleted) {
+        console.log("⏭️ 이미 CredentialAccept 완료되어 건너뜀");
+        return;
+      }
+
+      try {
+        console.log("🚀 홈 화면 진입 - 자동 CredentialAccept 시작");
+
+        // 액세스 토큰 가져오기
+        console.log("🔍 액세스 토큰 가져오는 중...");
+        const accessToken = await tokenManager.getAccessToken();
+        console.log("🔍 액세스 토큰:", accessToken ? "존재함" : "없음");
+
+        if (!accessToken) {
+          console.log("ℹ️ 액세스 토큰이 없어서 CredentialAccept 건너뜀");
+          return;
+        }
+
+        // JWT에서 XRPL 지갑 정보 확인
+        console.log("🔍 JWT 파싱 시작...");
+        const walletInfo = getXrplWalletInfo(accessToken);
+        console.log("🔍 XRPL 지갑 정보:", walletInfo);
+
+        if (!walletInfo) {
+          console.log("ℹ️ XRPL 지갑 정보가 없어서 CredentialAccept 건너뜀");
+          return;
+        }
+
+        console.log("🎯 사용자 XRPL 주소:", walletInfo.userAddress);
+        console.log("🎯 발급자 XRPL 주소:", walletInfo.issuerAddress || "없음");
+
+        // CredentialAccept API 호출
+        console.log("🌐 CredentialAccept API 호출 시작...");
+        const response = await fetch("/api/credential/accept", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: accessToken,
+          },
+        });
+
+        console.log("🌐 API 응답 상태:", response.status);
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log("✅ CredentialAccept 성공:", result);
+          setCredentialAcceptCompleted(true);
+          // sessionStorage에 완료 상태 저장
+          sessionStorage.setItem("credentialAcceptCompleted", "true");
+        } else {
+          const error = await response.json();
+          console.error("❌ CredentialAccept 실패:", error);
+        }
+      } catch (error) {
+        console.error("❌ CredentialAccept 실행 중 에러:", error);
+      }
+    };
+
+    // 홈 화면 진입 후 2초 뒤에 실행
+    console.log("⏰ 2초 후 CredentialAccept 실행 예약");
+    const timer = setTimeout(executeCredentialAccept, 2000);
+    return () => clearTimeout(timer);
+  }, [credentialAcceptCompleted]);
+
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
-  const [credentialAcceptCompleted, setCredentialAcceptCompleted] =
-    useState(false);
 
   // Credential Setup Hook
   const {
@@ -78,12 +153,13 @@ export default function HomeScreen({
     credentialType,
     issuerSeed,
     subjectSeed,
+    credentialAcceptCompleted: hookCredentialAcceptCompleted,
     markAsCompleted,
   } = useCredentialSetup({
     credentialType: "DRIVER_LICENCE",
     delay: 1000,
-    // 개발 환경에서 강제 표시하려면 forceShow: true 추가
-    forceShow: true, // 테스트를 위해 true로 변경
+    forceShow: false, // CredentialAccept 완료 후에만 표시
+    showAfterAccept: true, // CredentialAccept 완료 후 표시
   });
 
   // 자동 CredentialAccept 실행
@@ -748,6 +824,9 @@ export default function HomeScreen({
         onClose={() => {
           markAsCompleted();
         }}
+        credentialAcceptCompleted={
+          credentialAcceptCompleted || hookCredentialAcceptCompleted
+        }
         onAccept={async () => {
           try {
             console.log("🚀 KYC 인증 및 XRPL Credential Accept 시작...");
