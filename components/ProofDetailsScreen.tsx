@@ -68,10 +68,12 @@ export default function ProofDetailsScreen({
           </h3>
           {appState.capturedImage && (
             <div className="w-full h-48 rounded-xl overflow-hidden">
-              <img
+              <Image
                 src={appState.capturedImage}
                 alt="Captured proof"
                 className="w-full h-full object-cover"
+                width={400}
+                height={300}
               />
             </div>
           )}

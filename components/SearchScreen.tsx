@@ -423,7 +423,7 @@ export default function SearchScreen({
                 ) : (
                   <div className="text-center py-8">
                     <p className="text-[#9b9ba1] mb-4">
-                      No results found for "{currentSearchQuery}"
+                      No results found for &quot;{currentSearchQuery}&quot;
                     </p>
                     <div>
                       <p className="text-sm text-[#686873] mb-2">
@@ -462,10 +462,12 @@ export default function SearchScreen({
                       <div className="flex space-x-3">
                         {/* Proof Thumbnail */}
                         <div className="w-16 h-16 rounded-lg overflow-hidden bg-[#f6f9ff] flex-shrink-0">
-                          <img
+                          <Image
                             src={proof.image}
                             alt={proof.challengeName}
                             className="w-full h-full object-cover"
+                            width={64}
+                            height={64}
                           />
                         </div>
 
@@ -502,7 +504,7 @@ export default function SearchScreen({
                 ) : (
                   <div className="text-center py-8">
                     <p className="text-[#9b9ba1] mb-4">
-                      No results found for "{currentSearchQuery}"
+                      No results found for &quot;{currentSearchQuery}&quot;
                     </p>
                     <div>
                       <p className="text-sm text-[#686873] mb-2">

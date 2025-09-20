@@ -175,10 +175,12 @@ export default function ProofGalleryScreen({
                 <Card className="w-full h-full overflow-hidden crypto-shadow hover:scale-105 transition-transform">
                   {proof.type === "photo" && proof.image ? (
                     <div className="relative w-full h-full">
-                      <img
+                      <Image
                         src={proof.image}
                         alt={proof.challengeName}
                         className="w-full h-full object-cover"
+                        width={200}
+                        height={200}
                       />
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
                         <p className="text-white text-xs font-medium">

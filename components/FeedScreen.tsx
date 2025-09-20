@@ -376,11 +376,13 @@ export default function FeedScreen({ navigateToScreen }: FeedScreenProps) {
 
                 {/* Post Image */}
                 <div className="mb-4">
-                  <img
+                  <Image
                     src={post.image}
                     alt="Post content"
                     className="w-full rounded-lg object-cover"
                     style={{ aspectRatio: "16/9" }}
+                    width={400}
+                    height={300}
                   />
                 </div>
 

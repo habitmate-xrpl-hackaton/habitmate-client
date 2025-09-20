@@ -248,10 +248,12 @@ export default function ChallengesScreen({
       {/* Sponsor Logo - Top Right */}
       {challenge.sponsorLogo && (
         <div className="absolute top-4 right-4 w-10 h-10 bg-white rounded-lg border border-[#eaecf0] flex items-center justify-center overflow-hidden">
-          <img
+          <Image
             src={challenge.sponsorLogo}
             alt={challenge.sponsorName}
             className="w-6 h-6 object-contain"
+            width={24}
+            height={24}
           />
         </div>
       )}

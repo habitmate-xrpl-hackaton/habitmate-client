@@ -123,10 +123,12 @@ export default function ProofDetailScreen({
         {/* Large Proof Photo */}
         <div className="flex-1 bg-[rgba(0,0,0,0)] flex items-center justify-center p-4">
           {proof.image ? (
-            <img
+            <Image
               src={proof.image}
               alt="Proof submission"
               className="max-w-full max-h-full object-contain rounded-lg"
+              width={400}
+              height={300}
             />
           ) : (
             <div className="w-full max-w-sm aspect-square bg-[#d7d9ff] rounded-lg flex items-center justify-center">

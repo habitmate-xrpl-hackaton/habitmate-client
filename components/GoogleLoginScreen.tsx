@@ -34,7 +34,7 @@ export default function GoogleLoginScreen() {
       });
       router.push("/home");
     }
-  }, [status, session, router]);
+  }, [status, session, router, updateUser]);
 
   const handleGoogleLogin = async () => {
     try {

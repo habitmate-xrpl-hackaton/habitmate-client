@@ -2,11 +2,25 @@ import imgMask from "figma:asset/8abe8f69da0cce56e30514863bd05460d9211b32.png";
 import imgMask1 from "figma:asset/77627788cb83ebc71f2e0fdf2589a6c21d441acc.png";
 import imgImage from "figma:asset/ce427f7c805cbab99de05e414833474a4c2bd0cf.png";
 import imgImage1 from "figma:asset/e49e1b41aa4c1dfbe9b36ce2bd48d4d1c05ae1ef.png";
-import { imgSignalWifiBattery, imgRightIcon, imgIconsTimeCircle, imgIconsFolder, img1stButton, img2ndButton, img3rdButton, img4thButton, imgIconsPlusCrFr } from "./svg-b10nj";
+import {
+  imgSignalWifiBattery,
+  imgRightIcon,
+  imgIconsTimeCircle,
+  imgIconsFolder,
+  img1stButton,
+  img2ndButton,
+  img3rdButton,
+  img4thButton,
+  imgIconsPlusCrFr,
+} from "./svg-b10nj";
+import Image from "next/image";
 
 function StatusBarTime() {
   return (
-    <div className="h-[21px] relative rounded-[24px] shrink-0 w-[54px]" data-name="_StatusBar-time">
+    <div
+      className="h-[21px] relative rounded-[24px] shrink-0 w-[54px]"
+      data-name="_StatusBar-time"
+    >
       <div className="absolute font-['SF_Pro_Text:Semibold',_sans-serif] h-5 leading-[0] left-[27px] not-italic text-[16px] text-black text-center top-px tracking-[-0.32px] translate-x-[-50%] w-[54px]">
         <p className="leading-[21px]">9:41</p>
       </div>
@@ -16,7 +30,10 @@ function StatusBarTime() {
 
 function LeftSide() {
   return (
-    <div className="basis-0 grow h-full min-h-px min-w-px relative shrink-0" data-name="Left Side">
+    <div
+      className="basis-0 grow h-full min-h-px min-w-px relative shrink-0"
+      data-name="Left Side"
+    >
       <div className="flex flex-col items-center justify-center relative size-full">
         <div className="box-border content-stretch flex flex-col gap-2 items-center justify-center pb-[3px] pl-2.5 pr-0 pt-0 relative size-full">
           <StatusBarTime />
@@ -27,16 +44,31 @@ function LeftSide() {
 }
 
 function TrueDepthCamera() {
-  return <div className="absolute bg-black h-[37px] rounded-[100px] top-1/2 translate-x-[-50%] translate-y-[-50%] w-20" data-name="TrueDepth camera" style={{ left: "calc(50% - 22.5px)" }} />;
+  return (
+    <div
+      className="absolute bg-black h-[37px] rounded-[100px] top-1/2 translate-x-[-50%] translate-y-[-50%] w-20"
+      data-name="TrueDepth camera"
+      style={{ left: "calc(50% - 22.5px)" }}
+    />
+  );
 }
 
 function FaceTimeCamera() {
-  return <div className="absolute bg-black rounded-[100px] size-[37px] top-1/2 translate-x-[-50%] translate-y-[-50%]" data-name="FaceTime camera" style={{ left: "calc(50% + 44px)" }} />;
+  return (
+    <div
+      className="absolute bg-black rounded-[100px] size-[37px] top-1/2 translate-x-[-50%] translate-y-[-50%]"
+      data-name="FaceTime camera"
+      style={{ left: "calc(50% + 44px)" }}
+    />
+  );
 }
 
 function StatusBarDynamicIsland() {
   return (
-    <div className="bg-black h-[37px] relative rounded-[100px] shrink-0 w-[125px]" data-name="StatusBar-dynamicIsland">
+    <div
+      className="bg-black h-[37px] relative rounded-[100px] shrink-0 w-[125px]"
+      data-name="StatusBar-dynamicIsland"
+    >
       <TrueDepthCamera />
       <FaceTimeCamera />
     </div>
@@ -45,7 +77,10 @@ function StatusBarDynamicIsland() {
 
 function DynamicIsland() {
   return (
-    <div className="content-stretch flex flex-col h-full items-center justify-center relative shrink-0" data-name="Dynamic Island">
+    <div
+      className="content-stretch flex flex-col h-full items-center justify-center relative shrink-0"
+      data-name="Dynamic Island"
+    >
       <StatusBarDynamicIsland />
     </div>
   );
@@ -53,7 +88,10 @@ function DynamicIsland() {
 
 function SignalWifiBattery() {
   return (
-    <div className="h-[13px] relative shrink-0 w-[78.401px]" data-name="Signal, Wifi, Battery">
+    <div
+      className="h-[13px] relative shrink-0 w-[78.401px]"
+      data-name="Signal, Wifi, Battery"
+    >
       <img className="block max-w-none size-full" src={imgSignalWifiBattery} />
     </div>
   );
@@ -61,7 +99,10 @@ function SignalWifiBattery() {
 
 function RightSide() {
   return (
-    <div className="basis-0 grow h-full min-h-px min-w-px relative shrink-0" data-name="Right Side">
+    <div
+      className="basis-0 grow h-full min-h-px min-w-px relative shrink-0"
+      data-name="Right Side"
+    >
       <div className="flex flex-row items-center justify-center relative size-full">
         <div className="box-border content-stretch flex gap-2 items-center justify-center pl-0 pr-[11px] py-0 relative size-full">
           <SignalWifiBattery />
@@ -73,7 +114,10 @@ function RightSide() {
 
 function StatusBar() {
   return (
-    <div className="content-stretch flex h-[59px] items-end justify-center relative shrink-0 w-[393px]" data-name="Status Bar">
+    <div
+      className="content-stretch flex h-[59px] items-end justify-center relative shrink-0 w-[393px]"
+      data-name="Status Bar"
+    >
       <LeftSide />
       <DynamicIsland />
       <RightSide />
@@ -101,7 +145,10 @@ function RightIcon() {
 
 function HeaderType1() {
   return (
-    <div className="content-stretch flex gap-2 h-12 items-center justify-start relative shrink-0 w-[345px]" data-name="Header Type 1">
+    <div
+      className="content-stretch flex gap-2 h-12 items-center justify-start relative shrink-0 w-[345px]"
+      data-name="Header Type 1"
+    >
       <Frame2608541 />
       <RightIcon />
     </div>
@@ -110,8 +157,14 @@ function HeaderType1() {
 
 function Header() {
   return (
-    <div className="bg-white box-border content-stretch flex flex-col gap-3 items-center justify-start pb-4 pt-0 px-6 relative shrink-0 w-[393px]" data-name="Header">
-      <div aria-hidden="true" className="absolute border-[#eaecf0] border-[0px_0px_1px] border-solid inset-0 pointer-events-none" />
+    <div
+      className="bg-white box-border content-stretch flex flex-col gap-3 items-center justify-start pb-4 pt-0 px-6 relative shrink-0 w-[393px]"
+      data-name="Header"
+    >
+      <div
+        aria-hidden="true"
+        className="absolute border-[#eaecf0] border-[0px_0px_1px] border-solid inset-0 pointer-events-none"
+      />
       <StatusBar />
       <HeaderType1 />
     </div>
@@ -120,7 +173,10 @@ function Header() {
 
 function Header1() {
   return (
-    <div className="content-stretch flex gap-2 items-center justify-start leading-[0] not-italic relative shrink-0 w-full" data-name="Header">
+    <div
+      className="content-stretch flex gap-2 items-center justify-start leading-[0] not-italic relative shrink-0 w-full"
+      data-name="Header"
+    >
       <div className="basis-0 font-['Pretendard:Medium',_sans-serif] grow min-h-px min-w-px relative shrink-0 text-[#040415] text-[14px]">
         <p className="leading-[20px]">Suggested for You</p>
       </div>
@@ -173,7 +229,10 @@ function Frame55() {
 
 function Boxes() {
   return (
-    <div className="box-border content-stretch flex gap-4 items-start justify-start relative shadow-[58px_26px_68px_0px_rgba(35,44,93,0.06)] shrink-0" data-name="Boxes">
+    <div
+      className="box-border content-stretch flex gap-4 items-start justify-start relative shadow-[58px_26px_68px_0px_rgba(35,44,93,0.06)] shrink-0"
+      data-name="Boxes"
+    >
       <Frame55 />
     </div>
   );
@@ -221,7 +280,10 @@ function Frame56() {
 
 function Boxes1() {
   return (
-    <div className="box-border content-stretch flex gap-4 items-start justify-start relative shadow-[58px_26px_68px_0px_rgba(35,44,93,0.06)] shrink-0" data-name="Boxes">
+    <div
+      className="box-border content-stretch flex gap-4 items-start justify-start relative shadow-[58px_26px_68px_0px_rgba(35,44,93,0.06)] shrink-0"
+      data-name="Boxes"
+    >
       <Frame56 />
     </div>
   );
@@ -269,7 +331,10 @@ function Frame57() {
 
 function Boxes2() {
   return (
-    <div className="box-border content-stretch flex gap-4 items-start justify-start relative shadow-[58px_26px_68px_0px_rgba(35,44,93,0.06)] shrink-0" data-name="Boxes">
+    <div
+      className="box-border content-stretch flex gap-4 items-start justify-start relative shadow-[58px_26px_68px_0px_rgba(35,44,93,0.06)] shrink-0"
+      data-name="Boxes"
+    >
       <Frame57 />
     </div>
   );
@@ -277,7 +342,10 @@ function Boxes2() {
 
 function Habits() {
   return (
-    <div className="content-stretch flex gap-3 items-start justify-start relative shrink-0" data-name="Habits">
+    <div
+      className="content-stretch flex gap-3 items-start justify-start relative shrink-0"
+      data-name="Habits"
+    >
       <Boxes />
       <Boxes1 />
       <Boxes2 />
@@ -287,7 +355,10 @@ function Habits() {
 
 function Suggested() {
   return (
-    <div className="content-stretch flex flex-col gap-1 items-start justify-start relative shrink-0 w-full" data-name="Suggested">
+    <div
+      className="content-stretch flex flex-col gap-1 items-start justify-start relative shrink-0 w-full"
+      data-name="Suggested"
+    >
       <Header1 />
       <Habits />
     </div>
@@ -296,7 +367,10 @@ function Suggested() {
 
 function Header2() {
   return (
-    <div className="content-stretch flex gap-2 items-center justify-start leading-[0] not-italic relative shrink-0 w-full" data-name="Header">
+    <div
+      className="content-stretch flex gap-2 items-center justify-start leading-[0] not-italic relative shrink-0 w-full"
+      data-name="Header"
+    >
       <div className="basis-0 font-['Pretendard:Medium',_sans-serif] grow min-h-px min-w-px relative shrink-0 text-[#040415] text-[14px]">
         <p className="leading-[20px]">Habit Clubs</p>
       </div>
@@ -315,7 +389,10 @@ function Frame37() {
           <p className="leading-[24px] whitespace-pre">😻</p>
         </div>
       </div>
-      <div aria-hidden="true" className="absolute border border-[#eaecf0] border-solid inset-[-0.5px] pointer-events-none rounded-[12.5px]" />
+      <div
+        aria-hidden="true"
+        className="absolute border border-[#eaecf0] border-solid inset-[-0.5px] pointer-events-none rounded-[12.5px]"
+      />
     </div>
   );
 }
@@ -344,8 +421,14 @@ function Frame39() {
 
 function Boxes3() {
   return (
-    <div className="bg-white box-border content-stretch flex flex-col gap-2 items-start justify-start px-4 py-3 relative rounded-[16px] shrink-0 w-32" data-name="Boxes">
-      <div aria-hidden="true" className="absolute border border-[#eaecf0] border-solid inset-0 pointer-events-none rounded-[16px] shadow-[58px_26px_68px_0px_rgba(35,44,93,0.06)]" />
+    <div
+      className="bg-white box-border content-stretch flex flex-col gap-2 items-start justify-start px-4 py-3 relative rounded-[16px] shrink-0 w-32"
+      data-name="Boxes"
+    >
+      <div
+        aria-hidden="true"
+        className="absolute border border-[#eaecf0] border-solid inset-0 pointer-events-none rounded-[16px] shadow-[58px_26px_68px_0px_rgba(35,44,93,0.06)]"
+      />
       <Frame39 />
     </div>
   );
@@ -359,7 +442,10 @@ function Frame40() {
           <p className="leading-[24px] whitespace-pre">🌃</p>
         </div>
       </div>
-      <div aria-hidden="true" className="absolute border border-[#eaecf0] border-solid inset-[-0.5px] pointer-events-none rounded-[12.5px]" />
+      <div
+        aria-hidden="true"
+        className="absolute border border-[#eaecf0] border-solid inset-[-0.5px] pointer-events-none rounded-[12.5px]"
+      />
     </div>
   );
 }
@@ -388,8 +474,14 @@ function Frame42() {
 
 function Boxes4() {
   return (
-    <div className="bg-white box-border content-stretch flex flex-col gap-2 items-start justify-start px-4 py-3 relative rounded-[16px] shrink-0 w-32" data-name="Boxes">
-      <div aria-hidden="true" className="absolute border border-[#eaecf0] border-solid inset-0 pointer-events-none rounded-[16px] shadow-[58px_26px_68px_0px_rgba(35,44,93,0.06)]" />
+    <div
+      className="bg-white box-border content-stretch flex flex-col gap-2 items-start justify-start px-4 py-3 relative rounded-[16px] shrink-0 w-32"
+      data-name="Boxes"
+    >
+      <div
+        aria-hidden="true"
+        className="absolute border border-[#eaecf0] border-solid inset-0 pointer-events-none rounded-[16px] shadow-[58px_26px_68px_0px_rgba(35,44,93,0.06)]"
+      />
       <Frame42 />
     </div>
   );
@@ -403,7 +495,10 @@ function Frame43() {
           <p className="leading-[24px] whitespace-pre">🏃🏻‍♂️</p>
         </div>
       </div>
-      <div aria-hidden="true" className="absolute border border-[#eaecf0] border-solid inset-[-0.5px] pointer-events-none rounded-[12.5px]" />
+      <div
+        aria-hidden="true"
+        className="absolute border border-[#eaecf0] border-solid inset-[-0.5px] pointer-events-none rounded-[12.5px]"
+      />
     </div>
   );
 }
@@ -432,8 +527,14 @@ function Frame45() {
 
 function Boxes5() {
   return (
-    <div className="bg-white box-border content-stretch flex flex-col gap-2 items-start justify-start px-4 py-3 relative rounded-[16px] shrink-0 w-32" data-name="Boxes">
-      <div aria-hidden="true" className="absolute border border-[#eaecf0] border-solid inset-0 pointer-events-none rounded-[16px] shadow-[58px_26px_68px_0px_rgba(35,44,93,0.06)]" />
+    <div
+      className="bg-white box-border content-stretch flex flex-col gap-2 items-start justify-start px-4 py-3 relative rounded-[16px] shrink-0 w-32"
+      data-name="Boxes"
+    >
+      <div
+        aria-hidden="true"
+        className="absolute border border-[#eaecf0] border-solid inset-0 pointer-events-none rounded-[16px] shadow-[58px_26px_68px_0px_rgba(35,44,93,0.06)]"
+      />
       <Frame45 />
     </div>
   );
@@ -441,7 +542,10 @@ function Boxes5() {
 
 function Clubs() {
   return (
-    <div className="content-stretch flex gap-3 items-start justify-start relative shrink-0" data-name="Clubs">
+    <div
+      className="content-stretch flex gap-3 items-start justify-start relative shrink-0"
+      data-name="Clubs"
+    >
       <Boxes3 />
       <Boxes4 />
       <Boxes5 />
@@ -451,7 +555,10 @@ function Clubs() {
 
 function Clubs1() {
   return (
-    <div className="content-stretch flex flex-col gap-1 items-start justify-start relative shrink-0 w-full" data-name="Clubs">
+    <div
+      className="content-stretch flex flex-col gap-1 items-start justify-start relative shrink-0 w-full"
+      data-name="Clubs"
+    >
       <Header2 />
       <Clubs />
     </div>
@@ -460,7 +567,10 @@ function Clubs1() {
 
 function Header3() {
   return (
-    <div className="content-stretch flex gap-2 items-center justify-start leading-[0] not-italic relative shrink-0 w-full" data-name="Header">
+    <div
+      className="content-stretch flex gap-2 items-center justify-start leading-[0] not-italic relative shrink-0 w-full"
+      data-name="Header"
+    >
       <div className="basis-0 font-['Pretendard:Medium',_sans-serif] grow min-h-px min-w-px relative shrink-0 text-[#040415] text-[14px]">
         <p className="leading-[20px]">Challenges</p>
       </div>
@@ -474,14 +584,21 @@ function Header3() {
 function IconsTimeCircle() {
   return (
     <div className="relative shrink-0 size-6" data-name="Icons/Time Circle">
-      <img className="block max-w-none size-full" src={imgIconsTimeCircle} />
+      <Image
+        className="block max-w-none size-full"
+        src={imgIconsTimeCircle}
+        alt="Time circle icon"
+      />
     </div>
   );
 }
 
 function Titles() {
   return (
-    <div className="content-stretch flex flex-col items-start justify-start leading-[0] not-italic relative shrink-0 text-white w-full" data-name="Titles">
+    <div
+      className="content-stretch flex flex-col items-start justify-start leading-[0] not-italic relative shrink-0 text-white w-full"
+      data-name="Titles"
+    >
       <div className="font-['Pretendard:Medium',_sans-serif] relative shrink-0 text-[14px] w-full">
         <p className="leading-[20px]">Best Runners! 🏃🏻‍♂️</p>
       </div>
@@ -494,18 +611,36 @@ function Titles() {
 
 function ProgressBar() {
   return (
-    <div className="content-stretch flex flex-col h-1 items-start justify-start relative shrink-0 w-full" data-name="Progress Bar">
+    <div
+      className="content-stretch flex flex-col h-1 items-start justify-start relative shrink-0 w-full"
+      data-name="Progress Bar"
+    >
       <div className="bg-[#afb4ff] h-1 rounded-[8px] shrink-0 w-full" />
-      <div className="absolute bg-white h-1 rounded-[8px] top-0 translate-x-[-50%] w-[38px]" style={{ left: "calc(50% - 65px)" }} />
+      <div
+        className="absolute bg-white h-1 rounded-[8px] top-0 translate-x-[-50%] w-[38px]"
+        style={{ left: "calc(50% - 65px)" }}
+      />
     </div>
   );
 }
 
 function Avatar3() {
   return (
-    <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid mr-[-8px] place-items-start relative shrink-0" data-name="Avatar 3">
-      <div className="[grid-area:1_/_1] ml-0 mt-0 relative size-5" data-name="Mask">
-        <img className="block max-w-none size-full" height="20" src={imgMask} width="20" />
+    <div
+      className="grid-cols-[max-content] grid-rows-[max-content] inline-grid mr-[-8px] place-items-start relative shrink-0"
+      data-name="Avatar 3"
+    >
+      <div
+        className="[grid-area:1_/_1] ml-0 mt-0 relative size-5"
+        data-name="Mask"
+      >
+        <Image
+          className="block max-w-none size-full"
+          width={20}
+          height={20}
+          src={imgMask}
+          alt="User avatar"
+        />
       </div>
     </div>
   );
@@ -513,9 +648,21 @@ function Avatar3() {
 
 function Avatar2() {
   return (
-    <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid mr-[-8px] place-items-start relative shrink-0" data-name="Avatar 2">
-      <div className="[grid-area:1_/_1] ml-0 mt-0 relative size-5" data-name="Mask">
-        <img className="block max-w-none size-full" height="20" src={imgMask1} width="20" />
+    <div
+      className="grid-cols-[max-content] grid-rows-[max-content] inline-grid mr-[-8px] place-items-start relative shrink-0"
+      data-name="Avatar 2"
+    >
+      <div
+        className="[grid-area:1_/_1] ml-0 mt-0 relative size-5"
+        data-name="Mask"
+      >
+        <Image
+          className="block max-w-none size-full"
+          width={20}
+          height={20}
+          src={imgMask1}
+          alt="User avatar"
+        />
       </div>
     </div>
   );
@@ -523,7 +670,10 @@ function Avatar2() {
 
 function Member() {
   return (
-    <div className="box-border content-stretch flex items-start justify-start pl-0 pr-2 py-0 relative shrink-0" data-name="Member">
+    <div
+      className="box-border content-stretch flex items-start justify-start pl-0 pr-2 py-0 relative shrink-0"
+      data-name="Member"
+    >
       <Avatar3 />
       <Avatar2 />
     </div>
@@ -532,7 +682,10 @@ function Member() {
 
 function Friends() {
   return (
-    <div className="content-stretch flex gap-1 items-center justify-start leading-[0] relative shrink-0 w-full" data-name="Friends">
+    <div
+      className="content-stretch flex gap-1 items-center justify-start leading-[0] relative shrink-0 w-full"
+      data-name="Friends"
+    >
       <Member />
       <div className="basis-0 font-['Airbnb_Cereal:Book',_sans-serif] grow min-h-px min-w-px not-italic relative shrink-0 text-[10px] text-white">
         <p className="leading-[12px]">2 friends joined</p>
@@ -543,7 +696,10 @@ function Friends() {
 
 function Component01() {
   return (
-    <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start px-4 py-3 relative rounded-[16px] shrink-0 w-[200px]" data-name="01">
+    <div
+      className="box-border content-stretch flex flex-col gap-2 items-start justify-start px-4 py-3 relative rounded-[16px] shrink-0 w-[200px]"
+      data-name="01"
+    >
       <IconsTimeCircle />
       <Titles />
       <ProgressBar />
@@ -555,14 +711,23 @@ function Component01() {
 function IconsTimeCircle1() {
   return (
     <div className="relative shrink-0 size-6" data-name="Icons/Time Circle">
-      <img className="block max-w-none size-full" src={imgIconsTimeCircle} />
+      <Image
+        className="block max-w-none size-full"
+        width={24}
+        height={24}
+        src={imgIconsTimeCircle}
+        alt="Time circle icon"
+      />
     </div>
   );
 }
 
 function Titles1() {
   return (
-    <div className="content-stretch flex flex-col items-start justify-start leading-[0] not-italic relative shrink-0 text-white w-full" data-name="Titles">
+    <div
+      className="content-stretch flex flex-col items-start justify-start leading-[0] not-italic relative shrink-0 text-white w-full"
+      data-name="Titles"
+    >
       <div className="font-['Pretendard:Medium',_sans-serif] relative shrink-0 text-[14px] w-full">
         <p className="leading-[20px]">Best Bikers! 🚴🏻‍</p>
       </div>
@@ -575,18 +740,36 @@ function Titles1() {
 
 function ProgressBar1() {
   return (
-    <div className="content-stretch flex flex-col h-1 items-start justify-start relative shrink-0 w-full" data-name="Progress Bar">
+    <div
+      className="content-stretch flex flex-col h-1 items-start justify-start relative shrink-0 w-full"
+      data-name="Progress Bar"
+    >
       <div className="bg-[#afb4ff] h-1 rounded-[8px] shrink-0 w-full" />
-      <div className="absolute bg-white h-1 rounded-[8px] top-0 translate-x-[-50%] w-[110px]" style={{ left: "calc(50% - 29px)" }} />
+      <div
+        className="absolute bg-white h-1 rounded-[8px] top-0 translate-x-[-50%] w-[110px]"
+        style={{ left: "calc(50% - 29px)" }}
+      />
     </div>
   );
 }
 
 function Avatar4() {
   return (
-    <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-name="Avatar 3">
-      <div className="[grid-area:1_/_1] ml-0 mt-0 relative size-5" data-name="Mask">
-        <img className="block max-w-none size-full" height="20" src={imgMask} width="20" />
+    <div
+      className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0"
+      data-name="Avatar 3"
+    >
+      <div
+        className="[grid-area:1_/_1] ml-0 mt-0 relative size-5"
+        data-name="Mask"
+      >
+        <Image
+          className="block max-w-none size-full"
+          width={20}
+          height={20}
+          src={imgMask}
+          alt="User avatar"
+        />
       </div>
     </div>
   );
@@ -594,7 +777,10 @@ function Avatar4() {
 
 function Friends1() {
   return (
-    <div className="content-stretch flex gap-1 items-center justify-start leading-[0] relative shrink-0 w-full" data-name="Friends">
+    <div
+      className="content-stretch flex gap-1 items-center justify-start leading-[0] relative shrink-0 w-full"
+      data-name="Friends"
+    >
       <Avatar4 />
       <div className="basis-0 font-['Airbnb_Cereal:Book',_sans-serif] grow min-h-px min-w-px not-italic relative shrink-0 text-[10px] text-white">
         <p className="leading-[12px]">1 friends joined</p>
@@ -605,7 +791,10 @@ function Friends1() {
 
 function Component02() {
   return (
-    <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start px-4 py-3 relative rounded-[16px] shrink-0 w-[200px]" data-name="02">
+    <div
+      className="box-border content-stretch flex flex-col gap-2 items-start justify-start px-4 py-3 relative rounded-[16px] shrink-0 w-[200px]"
+      data-name="02"
+    >
       <IconsTimeCircle1 />
       <Titles1 />
       <ProgressBar1 />
@@ -616,7 +805,10 @@ function Component02() {
 
 function Cards() {
   return (
-    <div className="content-stretch flex gap-3 items-start justify-start relative shrink-0" data-name="Cards">
+    <div
+      className="content-stretch flex gap-3 items-start justify-start relative shrink-0"
+      data-name="Cards"
+    >
       <Component01 />
       <Component02 />
     </div>
@@ -625,7 +817,10 @@ function Cards() {
 
 function Challenges() {
   return (
-    <div className="content-stretch flex flex-col gap-1 items-start justify-start relative shrink-0 w-full" data-name="Challenges">
+    <div
+      className="content-stretch flex flex-col gap-1 items-start justify-start relative shrink-0 w-full"
+      data-name="Challenges"
+    >
       <Header3 />
       <Cards />
     </div>
@@ -634,7 +829,10 @@ function Challenges() {
 
 function Header4() {
   return (
-    <div className="content-stretch flex gap-2 items-center justify-start leading-[0] not-italic relative shrink-0 w-full" data-name="Header">
+    <div
+      className="content-stretch flex gap-2 items-center justify-start leading-[0] not-italic relative shrink-0 w-full"
+      data-name="Header"
+    >
       <div className="basis-0 font-['Pretendard:Medium',_sans-serif] grow min-h-px min-w-px relative shrink-0 text-[#040415] text-[14px]">
         <p className="leading-[20px]">Learning</p>
       </div>
@@ -648,14 +846,23 @@ function Header4() {
 function IconsFolder() {
   return (
     <div className="relative shrink-0 size-5" data-name="Icons/Folder">
-      <img className="block max-w-none size-full" src={imgIconsFolder} />
+      <Image
+        className="block max-w-none size-full"
+        width={20}
+        height={20}
+        src={imgIconsFolder}
+        alt="Folder icon"
+      />
     </div>
   );
 }
 
 function Header5() {
   return (
-    <div className="content-stretch flex gap-2 items-start justify-start relative shrink-0 w-full" data-name="Header">
+    <div
+      className="content-stretch flex gap-2 items-start justify-start relative shrink-0 w-full"
+      data-name="Header"
+    >
       <IconsFolder />
       <div className="font-['Pretendard:Medium',_sans-serif] leading-[0] not-italic relative shrink-0 text-[14px] text-white w-[140px]">
         <p className="leading-[20px]">Why should we drink water often?</p>
@@ -666,9 +873,16 @@ function Header5() {
 
 function Component2() {
   return (
-    <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start pb-3 pt-[88px] px-4 relative rounded-[16px] shrink-0 w-[200px]" data-name="01">
+    <div
+      className="box-border content-stretch flex flex-col gap-2 items-start justify-start pb-3 pt-[88px] px-4 relative rounded-[16px] shrink-0 w-[200px]"
+      data-name="01"
+    >
       <Header5 />
-      <div className="absolute bg-[#000dff33] bg-[position:0%_0%,_50%_50%] bg-size-[auto,cover] h-20 left-0 rounded-tl-[16px] rounded-tr-[16px] top-0 w-[200px]" data-name="Image" style={{ backgroundImage: `url('${imgImage}')` }} />
+      <div
+        className="absolute bg-[#000dff33] bg-[position:0%_0%,_50%_50%] bg-size-[auto,cover] h-20 left-0 rounded-tl-[16px] rounded-tr-[16px] top-0 w-[200px]"
+        data-name="Image"
+        style={{ backgroundImage: `url('${imgImage}')` }}
+      />
     </div>
   );
 }
@@ -676,14 +890,23 @@ function Component2() {
 function IconsFolder1() {
   return (
     <div className="relative shrink-0 size-5" data-name="Icons/Folder">
-      <img className="block max-w-none size-full" src={imgIconsFolder} />
+      <Image
+        className="block max-w-none size-full"
+        width={20}
+        height={20}
+        src={imgIconsFolder}
+        alt="Folder icon"
+      />
     </div>
   );
 }
 
 function Header6() {
   return (
-    <div className="content-stretch flex gap-2 items-start justify-start relative shrink-0 w-full" data-name="Header">
+    <div
+      className="content-stretch flex gap-2 items-start justify-start relative shrink-0 w-full"
+      data-name="Header"
+    >
       <IconsFolder1 />
       <div className="font-['Pretendard:Medium',_sans-serif] leading-[0] not-italic relative shrink-0 text-[14px] text-white w-[140px]">
         <p className="leading-[20px]">Benefits of regular walking</p>
@@ -694,16 +917,26 @@ function Header6() {
 
 function Component3() {
   return (
-    <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start pb-3 pt-[88px] px-4 relative rounded-[16px] shrink-0 w-[200px]" data-name="02">
+    <div
+      className="box-border content-stretch flex flex-col gap-2 items-start justify-start pb-3 pt-[88px] px-4 relative rounded-[16px] shrink-0 w-[200px]"
+      data-name="02"
+    >
       <Header6 />
-      <div className="absolute bg-[#000dff33] bg-[position:0%_0%,_50%_50%] bg-size-[auto,cover] h-20 left-0 rounded-tl-[16px] rounded-tr-[16px] top-0 w-[200px]" data-name="Image" style={{ backgroundImage: `url('${imgImage1}')` }} />
+      <div
+        className="absolute bg-[#000dff33] bg-[position:0%_0%,_50%_50%] bg-size-[auto,cover] h-20 left-0 rounded-tl-[16px] rounded-tr-[16px] top-0 w-[200px]"
+        data-name="Image"
+        style={{ backgroundImage: `url('${imgImage1}')` }}
+      />
     </div>
   );
 }
 
 function Posts() {
   return (
-    <div className="content-stretch flex gap-3 items-start justify-start relative shrink-0" data-name="Posts">
+    <div
+      className="content-stretch flex gap-3 items-start justify-start relative shrink-0"
+      data-name="Posts"
+    >
       <Component2 />
       <Component3 />
     </div>
@@ -712,7 +945,10 @@ function Posts() {
 
 function Learning() {
   return (
-    <div className="content-stretch flex flex-col gap-1 items-start justify-start relative shrink-0 w-full" data-name="Learning">
+    <div
+      className="content-stretch flex flex-col gap-1 items-start justify-start relative shrink-0 w-full"
+      data-name="Learning"
+    >
       <Header4 />
       <Posts />
     </div>
@@ -721,7 +957,10 @@ function Learning() {
 
 function Content() {
   return (
-    <div className="box-border content-stretch flex flex-col gap-4 items-start justify-start px-6 py-0 relative shrink-0 w-[393px]" data-name="Content">
+    <div
+      className="box-border content-stretch flex flex-col gap-4 items-start justify-start px-6 py-0 relative shrink-0 w-[393px]"
+      data-name="Content"
+    >
       <Suggested />
       <Clubs1 />
       <Challenges />
@@ -733,7 +972,13 @@ function Content() {
 function Component1stButton() {
   return (
     <div className="relative shrink-0 size-6" data-name="1st Button">
-      <img className="block max-w-none size-full" src={img1stButton} />
+      <Image
+        className="block max-w-none size-full"
+        width={24}
+        height={24}
+        src={img1stButton}
+        alt="1st button"
+      />
     </div>
   );
 }
@@ -741,14 +986,23 @@ function Component1stButton() {
 function Component2ndButton() {
   return (
     <div className="relative shrink-0 size-6" data-name="2nd Button">
-      <img className="block max-w-none size-full" src={img2ndButton} />
+      <Image
+        className="block max-w-none size-full"
+        width={24}
+        height={24}
+        src={img2ndButton}
+        alt="2nd button"
+      />
     </div>
   );
 }
 
 function LeftSide1() {
   return (
-    <div className="content-stretch flex gap-10 items-start justify-start relative shrink-0" data-name="Left Side">
+    <div
+      className="content-stretch flex gap-10 items-start justify-start relative shrink-0"
+      data-name="Left Side"
+    >
       <Component1stButton />
       <Component2ndButton />
     </div>
@@ -759,7 +1013,13 @@ function Component3rdButton() {
   return (
     <div className="relative shrink-0 size-6" data-name="3rd Button">
       <div className="absolute bottom-0 left-0 right-[-20.83%] top-[-20.83%]">
-        <img className="block max-w-none size-full" src={img3rdButton} />
+        <Image
+          className="block max-w-none size-full"
+          width={24}
+          height={24}
+          src={img3rdButton}
+          alt="3rd button"
+        />
       </div>
     </div>
   );
@@ -768,14 +1028,23 @@ function Component3rdButton() {
 function Component4thButton() {
   return (
     <div className="relative shrink-0 size-6" data-name="4th Button">
-      <img className="block max-w-none size-full" src={img4thButton} />
+      <Image
+        className="block max-w-none size-full"
+        width={24}
+        height={24}
+        src={img4thButton}
+        alt="4th button"
+      />
     </div>
   );
 }
 
 function RightSide1() {
   return (
-    <div className="content-stretch flex gap-10 items-start justify-start relative shrink-0" data-name="Right Side">
+    <div
+      className="content-stretch flex gap-10 items-start justify-start relative shrink-0"
+      data-name="Right Side"
+    >
       <Component3rdButton />
       <Component4thButton />
     </div>
@@ -784,7 +1053,10 @@ function RightSide1() {
 
 function Buttons() {
   return (
-    <div className="basis-0 content-stretch flex grow items-start justify-between min-h-px min-w-px relative shrink-0" data-name="Buttons">
+    <div
+      className="basis-0 content-stretch flex grow items-start justify-between min-h-px min-w-px relative shrink-0"
+      data-name="Buttons"
+    >
       <LeftSide1 />
       <RightSide1 />
     </div>
@@ -793,9 +1065,18 @@ function Buttons() {
 
 function IconsPlusCrFr() {
   return (
-    <div className="absolute left-1/2 size-12 top-1/2 translate-x-[-50%] translate-y-[-50%]" data-name="Icons/Plus cr-fr">
+    <div
+      className="absolute left-1/2 size-12 top-1/2 translate-x-[-50%] translate-y-[-50%]"
+      data-name="Icons/Plus cr-fr"
+    >
       <div className="absolute inset-[-79.17%_-254.17%_-187.5%_-12.5%]">
-        <img className="block max-w-none size-full" src={imgIconsPlusCrFr} />
+        <Image
+          className="block max-w-none size-full"
+          width={48}
+          height={48}
+          src={imgIconsPlusCrFr}
+          alt="Plus cr-fr icon"
+        />
       </div>
     </div>
   );
@@ -803,27 +1084,42 @@ function IconsPlusCrFr() {
 
 function AppBar() {
   return (
-    <div className="absolute bg-white bottom-[33px] left-[16.5px] rounded-[64px] w-[360px]" data-name="App Bar">
+    <div
+      className="absolute bg-white bottom-[33px] left-[16.5px] rounded-[64px] w-[360px]"
+      data-name="App Bar"
+    >
       <div className="box-border content-stretch flex gap-10 items-start justify-start overflow-clip px-6 py-5 relative w-[360px]">
         <Buttons />
         <IconsPlusCrFr />
       </div>
-      <div aria-hidden="true" className="absolute border-[#cdcdd0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[64px] shadow-[58px_26px_68px_0px_rgba(35,44,93,0.06)]" />
+      <div
+        aria-hidden="true"
+        className="absolute border-[#cdcdd0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[64px] shadow-[58px_26px_68px_0px_rgba(35,44,93,0.06)]"
+      />
     </div>
   );
 }
 
 function HomeIndicator() {
   return (
-    <div className="absolute bottom-0 box-border content-stretch flex flex-col gap-2 items-start justify-start left-[1.5px] px-32 py-2" data-name="Home Indicator">
-      <div className="bg-black h-[5px] rounded-[100px] shrink-0 w-[134px]" data-name="Home Indicator" />
+    <div
+      className="absolute bottom-0 box-border content-stretch flex flex-col gap-2 items-start justify-start left-[1.5px] px-32 py-2"
+      data-name="Home Indicator"
+    >
+      <div
+        className="bg-black h-[5px] rounded-[100px] shrink-0 w-[134px]"
+        data-name="Home Indicator"
+      />
     </div>
   );
 }
 
 export default function Explore() {
   return (
-    <div className="bg-[#f6f9ff] content-stretch flex flex-col gap-3 items-center justify-start overflow-clip relative rounded-[48px] size-full" data-name="Explore">
+    <div
+      className="bg-[#f6f9ff] content-stretch flex flex-col gap-3 items-center justify-start overflow-clip relative rounded-[48px] size-full"
+      data-name="Explore"
+    >
       <Header />
       <Content />
       <AppBar />

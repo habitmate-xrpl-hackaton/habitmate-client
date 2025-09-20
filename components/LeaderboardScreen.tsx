@@ -576,10 +576,12 @@ export default function LeaderboardScreen({
 
               {/* Avatar */}
               <div className="w-7 h-7">
-                <img
+                <Image
                   className="w-full h-full rounded-full"
                   src={user.avatar}
                   alt={user.name}
+                  width={28}
+                  height={28}
                 />
               </div>
             </div>

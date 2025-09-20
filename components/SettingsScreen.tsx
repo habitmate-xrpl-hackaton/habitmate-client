@@ -293,7 +293,7 @@ export default function SettingsScreen({
                 <WalletConnectButton
                   isConnected={appState.wallet.isConnected}
                   address={appState.wallet.address}
-                  onConnect={connectWallet}
+                  onConnect={connectWallet || (() => {})}
                   onDisconnect={disconnectWallet}
                 />
               </div>

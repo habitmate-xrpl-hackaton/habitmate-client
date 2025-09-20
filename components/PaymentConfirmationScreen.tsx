@@ -226,10 +226,12 @@ export default function PaymentConfirmationScreen({
               <div className="p-3 bg-[#fff3da] rounded-xl border border-[#fea800]/20">
                 <div className="flex items-center gap-2 mb-1">
                   {challenge.sponsorLogo && (
-                    <img
+                    <Image
                       src={challenge.sponsorLogo}
                       alt={challenge.sponsorName}
                       className="w-5 h-5 object-contain"
+                      width={20}
+                      height={20}
                     />
                   )}
                   <span className="text-sm font-medium text-[#fea800]">
@@ -259,7 +261,9 @@ export default function PaymentConfirmationScreen({
           <Checkbox
             id="terms"
             checked={agreed}
-            onCheckedChange={setAgreed}
+            onCheckedChange={(checked) =>
+              setAgreed(checked === "indeterminate" ? false : checked)
+            }
             className="mt-1 border-[#eaecf0] data-[state=checked]:bg-[#3843ff] data-[state=checked]:border-[#3843ff]"
           />
           <label
@@ -318,8 +322,8 @@ export default function PaymentConfirmationScreen({
                   Payment Confirmed!
                 </h3>
                 <p className="text-sm text-[#686873] leading-relaxed">
-                  You've successfully joined the challenge. Your participation
-                  fee has been secured in XRPL escrow.
+                  You&apos;ve successfully joined the challenge. Your
+                  participation fee has been secured in XRPL escrow.
                 </p>
               </div>
 

@@ -1,9 +1,5 @@
 import { baseFetcher, swrFetcher } from "@/lib/swr/ClientSWRConfig";
-import {
-  ChallengeRequest,
-  GetPublicChallengesParams,
-  PublicChallengesResponse,
-} from "./types";
+import { ChallengeRequest } from "./types";
 
 // API 베이스 URL
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
