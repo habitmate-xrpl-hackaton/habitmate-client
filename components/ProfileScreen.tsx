@@ -25,6 +25,7 @@ import { Progress } from "./ui/progress";
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer } from "recharts";
 import { WalletConnectButton } from "./WalletConnectButton";
 import SettingsScreen from "./SettingsScreen";
+import EditProfileScreen from "./EditProfileScreen";
 import { useSession } from "next-auth/react";
 
 interface ProfileScreenProps {
@@ -47,6 +48,7 @@ export default function ProfileScreen({
   const [activeTab, setActiveTab] = useState("weekly");
   const [contentTab, setContentTab] = useState("activity"); // New tab state for Activity/Achievements
   const [showSettings, setShowSettings] = useState(false);
+  const [showEditProfile, setShowEditProfile] = useState(false);
   const { data: session } = useSession();
 
   // 모달이 열릴 때 body에 클래스 추가/제거
@@ -237,6 +239,28 @@ export default function ProfileScreen({
     { week: "11", rate: 92, height: 70 },
   ];
 
+  // EditProfileScreen을 보여주는 경우
+  if (showEditProfile) {
+    return (
+      <EditProfileScreen
+        navigateToScreen={(screen, data) => {
+          if (screen === "back") {
+            setShowEditProfile(false);
+          } else {
+            navigateToScreen(screen, data);
+          }
+        }}
+        appState={appState}
+        updateUser={(userData) => {
+          // Update user data in app state
+          if (appState.updateUser) {
+            appState.updateUser(userData);
+          }
+        }}
+      />
+    );
+  }
+
   return (
     <div className="bg-[#f6f9ff] overflow-hidden relative rounded-[32px] size-full">
       {/* Profile Header */}
@@ -274,7 +298,7 @@ export default function ProfileScreen({
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => navigateToScreen("edit-profile")}
+                onClick={() => setShowEditProfile(true)}
                 className="w-10 h-10 p-0 bg-[#f6f9ff] border border-[#eaecf0] rounded-xl hover:bg-gray-50 cursor-pointer"
               >
                 <Edit className="h-4 w-4 text-[#040415]" />

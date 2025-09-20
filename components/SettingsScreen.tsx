@@ -100,7 +100,7 @@ export default function SettingsScreen({
               variant="ghost"
               size="sm"
               onClick={onClose || (() => navigateToScreen("profile"))}
-              className="p-2 mr-2"
+              className="p-2 mr-2 cursor-pointer"
             >
               <ArrowLeft className="h-6 w-6" />
             </Button>

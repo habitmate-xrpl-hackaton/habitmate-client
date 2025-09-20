@@ -8,9 +8,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { toast } from "sonner";
 
 interface EditProfileScreenProps {
-  navigateToScreen: (screen: string) => void;
-  appState: any;
-  updateUser: (userData: any) => void;
+  navigateToScreen: (screen: string, data?: any) => void;
+  appState?: any;
+  updateUser?: (userData: any) => void;
 }
 
 export default function EditProfileScreen({
@@ -19,9 +19,9 @@ export default function EditProfileScreen({
   updateUser,
 }: EditProfileScreenProps) {
   const [formData, setFormData] = useState({
-    name: appState.user.name,
-    email: appState.user.email,
-    avatar: appState.user.avatar,
+    name: appState?.user?.name || "",
+    email: appState?.user?.email || "",
+    avatar: appState?.user?.avatar || "",
   });
   const [isSaving, setIsSaving] = useState(false);
 
@@ -55,18 +55,18 @@ export default function EditProfileScreen({
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     // Update user data
-    updateUser(formData);
+    updateUser?.(formData);
 
     setIsSaving(false);
     toast.success("Profile updated successfully! 🎉");
-    navigateToScreen("profile");
+    navigateToScreen("back");
   };
 
   const hasChanges = () => {
     return (
-      formData.name !== appState.user.name ||
-      formData.email !== appState.user.email ||
-      formData.avatar !== appState.user.avatar
+      formData.name !== (appState?.user?.name || "") ||
+      formData.email !== (appState?.user?.email || "") ||
+      formData.avatar !== (appState?.user?.avatar || "")
     );
   };
 
@@ -78,8 +78,8 @@ export default function EditProfileScreen({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigateToScreen("profile")}
-            className="p-2"
+            onClick={() => navigateToScreen("back")}
+            className="p-2 cursor-pointer"
           >
             <ArrowLeft className="h-6 w-6" />
           </Button>
