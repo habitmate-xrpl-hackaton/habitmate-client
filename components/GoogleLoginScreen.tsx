@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { useApp } from "@/lib/context/AppContext";
@@ -10,38 +10,22 @@ import {
   imgMask2,
 } from "../imports/svg-hbl5y";
 import { useRouter } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
 
 export default function GoogleLoginScreen() {
   const { updateUser } = useApp();
   const router = useRouter();
-  const { data: session, status } = useSession();
-  const hasUpdatedUser = useRef(false);
 
-  // 로그인 상태 확인 및 사용자 정보 업데이트
-  useEffect(() => {
-    if (
-      status === "authenticated" &&
-      session?.user &&
-      !hasUpdatedUser.current
-    ) {
-      hasUpdatedUser.current = true;
+  const handleLogin = async () => {
+    try {
+      console.log("🚀 로그인 시작...");
+      // 더미 사용자 정보로 로그인
       updateUser({
         isLoggedIn: true,
-        name: session.user.name || "",
-        email: session.user.email || "",
-        avatar: session.user.image || "",
+        name: "테스트 사용자",
+        email: "test@example.com",
+        avatar: "",
       });
       router.push("/home");
-    }
-  }, [status, session, router, updateUser]);
-
-  const handleGoogleLogin = async () => {
-    try {
-      console.log("🚀 Google 로그인 시작...");
-      await signIn("google", {
-        callbackUrl: "/home",
-      });
     } catch (error) {
       console.error("💥 로그인 에러:", error);
     }
@@ -336,18 +320,18 @@ export default function GoogleLoginScreen() {
             {/* Login Button - Original size restored */}
             <div className="space-y-3">
               <Button
-                onClick={handleGoogleLogin}
+                onClick={handleLogin}
                 className="w-full bg-white text-[#040415] hover:bg-gray-100 rounded-[40px] px-5 py-4 shadow-[0px_12px_24px_0px_rgba(35,44,93,0.06)] flex items-center justify-center cursor-pointer"
               >
                 <Image
                   className="w-5 h-5 mr-3"
                   src={imgIconsGoogle}
-                  alt="Google icon"
+                  alt="Login icon"
                   width={20}
                   height={20}
                 />
                 <span className="text-[14px] leading-[20px] font-medium">
-                  Continue with Google
+                  Start Tracking
                 </span>
               </Button>
 

@@ -14,7 +14,6 @@ import { Switch } from "./ui/switch";
 import { Separator } from "./ui/separator";
 import { toast } from "sonner";
 import { WalletConnectButton } from "./WalletConnectButton";
-import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 interface SettingsScreenProps {
@@ -72,12 +71,6 @@ export default function SettingsScreen({
 
   const handleLogout = async () => {
     try {
-      // NextAuth 세션 쿠키 삭제
-      await signOut({
-        redirect: false,
-        callbackUrl: "/onboarding",
-      });
-
       // AppContext 사용자 상태 초기화
       updateUser?.({ isLoggedIn: false });
       toast.success("Logged out successfully");

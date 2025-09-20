@@ -8,7 +8,6 @@ import { Progress } from "./ui/progress";
 import RightIcon from "../imports/RightIcon";
 import LeftIcon from "../imports/LeftIcon-13-1947";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import NotificationCenterScreen from "./NotificationCenterScreen";
 import CredentialSetupModalWithXRPL from "./CredentialSetupModalWithXRPL";
 import { useCredentialSetup } from "@/lib/credentials/useCredentialSetup";
@@ -33,7 +32,6 @@ export default function HomeScreen({
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const { data: session } = useSession();
 
   // Credential Setup Hook
   const {
@@ -341,7 +339,7 @@ export default function HomeScreen({
         <div className="flex justify-between items-center">
           <div className="flex-1">
             <h2 className="text-lg text-[#040415] mb-1">
-              Hi, {session?.user?.name?.split(" ")[0] || "User"} 👋🏻
+              Hi, {appState.user.name} 👋🏻
             </h2>
             <p className="text-sm text-[#9b9ba1]">
               Let&apos;s make habits together!
@@ -353,9 +351,9 @@ export default function HomeScreen({
             onClick={() => router.push("/profile")}
             className="bg-[#ddf2fc] w-12 h-12 rounded-3xl flex items-center justify-center p-0 hover:bg-[#c7eaf7] transition-colors cursor-pointer"
           >
-            {session?.user?.image ? (
+            {appState.user.avatar ? (
               <Image
-                src={session?.user?.image}
+                src={appState.user.avatar}
                 width={48}
                 height={48}
                 alt="Profile"
@@ -646,7 +644,7 @@ export default function HomeScreen({
         onAccept={() => {
           console.log(
             "✅ XRPL Credential accepted for user:",
-            session?.user?.email
+            appState.user.email
           );
           markAsCompleted();
         }}

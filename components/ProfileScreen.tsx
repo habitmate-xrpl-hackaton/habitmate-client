@@ -26,7 +26,6 @@ import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer } from "recharts";
 import { WalletConnectButton } from "./WalletConnectButton";
 import SettingsScreen from "./SettingsScreen";
 import EditProfileScreen from "./EditProfileScreen";
-import { useSession } from "next-auth/react";
 
 interface ProfileScreenProps {
   navigateToScreen: (screen: string, data?: any) => void;
@@ -49,7 +48,6 @@ export default function ProfileScreen({
   const [contentTab, setContentTab] = useState("activity"); // New tab state for Activity/Achievements
   const [showSettings, setShowSettings] = useState(false);
   const [showEditProfile, setShowEditProfile] = useState(false);
-  const { data: session } = useSession();
 
   // 모달이 열릴 때 body에 클래스 추가/제거
   useEffect(() => {
@@ -269,9 +267,7 @@ export default function ProfileScreen({
           <div className="flex items-center space-x-4">
             <Avatar className="h-16 w-16">
               <AvatarImage src={viewingUser.avatar} alt={viewingUser.name} />
-              <AvatarFallback>
-                {session?.user?.name?.split(" ")[0] || "User"}
-              </AvatarFallback>
+              <AvatarFallback>Alex Chen</AvatarFallback>
             </Avatar>
             <div>
               <h1 className="text-xl font-medium text-[#040415]">

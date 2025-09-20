@@ -48,7 +48,7 @@ export default function ChallengesScreen({
 
   // async function fetchChallenges() {
   //   const response = await ky.get(
-  //     `https://xrpl-4mf9.onrender.com/api/v1/getChallenges`
+  //     `${API_BASE_URL}/getChallenges`
   //   );
   //   const data = await response.json();
   //   console.log("data : ", data);
