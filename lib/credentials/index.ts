@@ -12,6 +12,7 @@ export type { EscrowCreateParams } from "../escrow/escrowCreate";
 
 // 통합 테스트를 위한 import
 import { acceptDriverLicense } from "./credentialAccept";
+//여기 왜이러냐
 
 // 통합 테스트를 위한 유틸리티 함수들
 export const XRPL_UTILS = {
