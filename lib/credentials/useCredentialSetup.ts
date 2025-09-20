@@ -33,25 +33,16 @@ export function useCredentialSetup(options: CredentialSetupOptions = {}) {
       return;
     }
 
-    // 로컬 스토리지에서 사용자별 표시 여부 확인
-    const credentialSetupShown = localStorage.getItem("credential-setup-shown");
+    // 매번 로그인할 때마다 모달 표시
+    console.log("🚀 로그인 시 Credential Setup 모달 표시:", userEmail);
 
-    if (!credentialSetupShown || credentialSetupShown !== userEmail) {
-      console.log("🚀 새 사용자 감지, Credential Setup 모달 표시:", userEmail);
+    // 지연 시간 후 모달 표시
+    const timer = setTimeout(() => {
+      setShouldShowModal(true);
+    }, delay);
 
-      // 지연 시간 후 모달 표시
-      const timer = setTimeout(() => {
-        setShouldShowModal(true);
-        // 사용자 이메일로 표시 여부 저장
-        localStorage.setItem("credential-setup-shown", userEmail);
-      }, delay);
-
-      setIsLoading(false);
-      return () => clearTimeout(timer);
-    } else {
-      console.log("✅ 사용자 이미 Credential Setup 완료:", userEmail);
-      setIsLoading(false);
-    }
+    setIsLoading(false);
+    return () => clearTimeout(timer);
   }, [forceShow, delay]);
 
   const markAsCompleted = () => {
