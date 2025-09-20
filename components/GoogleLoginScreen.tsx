@@ -23,15 +23,32 @@ export default function GoogleLoginScreen() {
       // XRPL API 서버의 Google OAuth2 엔드포인트로 리디렉션
       const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+      if (!apiBaseUrl) {
+        console.error("❌ NEXT_PUBLIC_API_BASE_URL이 설정되지 않았습니다");
+        throw new Error("API Base URL이 설정되지 않았습니다");
+      }
+
+      // API Base URL 정리 (끝에 슬래시 제거)
+
+      // 임시 디버깅: 하드코딩된 URL로 테스트
+      const debugApiBaseUrl = apiBaseUrl;
+      console.log("🔧 디버깅 - 하드코딩된 API URL:", debugApiBaseUrl);
+
       // 콜백 URL 설정 (토큰 핸들러 페이지)
       const callbackUrl = `${window.location.origin}/token-handler`;
 
-      const googleAuthUrl = `${apiBaseUrl}/oauth2/authorization/google?redirect_uri=${encodeURIComponent(
+      // 디버깅을 위해 하드코딩된 URL 사용
+      const googleAuthUrl = `${debugApiBaseUrl}/oauth2/authorization/google?redirect_uri=${encodeURIComponent(
         callbackUrl
       )}`;
 
       console.log("🔗 Google 인증 URL:", googleAuthUrl);
       console.log("📋 콜백 URL:", callbackUrl);
+      console.log("🔍 환경 변수 확인:", {
+        apiBaseUrl,
+        callbackUrl,
+        origin: window.location.origin,
+      });
 
       window.location.href = googleAuthUrl;
     } catch (error) {
